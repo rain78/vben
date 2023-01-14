@@ -8,7 +8,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './data';
-  import { upSchooldate as update } from '/@/api/dynamic/agencyPersonnel';
+  import { upClassdate as update } from '/@/api/dynamic/agencyPersonnel';
   
   import { useMessage } from '/@/hooks/web/useMessage';
   export default defineComponent({

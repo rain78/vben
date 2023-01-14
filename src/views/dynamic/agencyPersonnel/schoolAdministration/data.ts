@@ -75,58 +75,30 @@ export const formSchema: FormSchema[] = [
   {
     field: 'badgeUrl',
     label: '校徽',
-    component: 'Input',
-    // component: 'CustomUpload',
-    rules: [{ required: true, message: '请选择图片' }],
-    componentProps: {
-      api: uploadApi,
-    },
-    render: ({ model, field }) => {
-      return h(CustomUpload,{
+    component: 'CustomUpload',
+    rules: [{ required: true, message: '请选择图片',trigger: 'blur', }],
+    componentProps: ({ schema, formModel}) => {
+      return {
         api: uploadApi,
+        value:formModel[schema.field],
         onChange: (value: string) => {
-          console.log('value=>',value)
-          model[field] = value;
+          formModel[schema.field]=value
         },
-      });
+      };
     },
-
     // render: ({ model, field }) => {
-    //   // console.log('校徽',model, field)
-    //   return h(uploadBtn,{
-    //     model, field,
+    //   return h(CustomUpload,{
+    //     api: uploadApi,
+    //     value: model[field],
     //     onChange: (value: string) => {
+    //       console.log('value=>',value)
     //       model[field] = value;
     //     },
     //   });
     // },
 
-    // render: ({ model, field }) => {
-    //   return h(Input, {
-    //     placeholder: '请输入',
-    //     value: model[field],
-    //     onChange: (e: ChangeEvent) => {
-    //       model[field] = e.target.value;
-    //     },
-    //   });
-    // },
-    // componentProps: {
-    //   api: uploadApi,
-    //   maxNumber:1
-      
-    // },
+    
   },
-  // {
-  //   field: 'badgeUrl',
-  //   label: '校徽',
-  //   component: 'Upload',
-  //   rules: [{ required: true, message: '请选择图片' }],
-  //   componentProps: {
-  //     api: uploadApi,
-  //     maxNumber:1
-      
-  //   },
-  // },
   {
     label: '创建年份',
     field: 'establishYear',
@@ -152,7 +124,8 @@ export const formSchema: FormSchema[] = [
       labelField: 'label',
       valueField: 'value',
     },
-    required: true,
+    // required: true,
+    rules: [{ required: true, message: '请选择办学性质',trigger: 'blur', }],
   },
   {
     label: '主管部门',

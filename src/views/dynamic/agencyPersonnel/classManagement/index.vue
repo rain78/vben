@@ -36,7 +36,8 @@
   import { parseTime } from '/@/utils/dateUtil';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getsSchoolList as getList,deleteSchoolData as deleteData } from '/@/api/dynamic/agencyPersonnel';
+   import { getsClassList as getList,deleteClassData as deleteData } from '/@/api/dynamic/agencyPersonnel';
+
 
   import { useModal } from '/@/components/Modal';
   import editModal from './editModal.vue';

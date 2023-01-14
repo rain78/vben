@@ -304,14 +304,23 @@ export function useDataSource(
       }
       // debugger
       
-      const {obj} = await api(params);
-      const res=obj?.records||obj
+      const {obj:res} = await api(params);
+      // const res = await api(params);
       rawDataSourceRef.value = res;
+      // console.log('res=>',res)
 
       const isArrayResult = Array.isArray(res);
 
       let resultItems: Recordable[] = isArrayResult ? res : get(res, listField);
       const resultTotal: number = isArrayResult ? res.length : get(res, totalField);
+      // // const res=obj?.records||obj
+      // // const res=obj?.records||obj
+      // rawDataSourceRef.value = res?.records||res;
+
+      // const isArrayResult = Array.isArray(res);
+
+      // let resultItems= res?.records||res;
+      // const resultTotal=parseInt(resultItems.total);
 
       // 假如数据变少，导致总页数变少并小于当前选中页码，通过getPaginationRef获取到的页码是不正确的，需获取正确的页码再次执行
       if (resultTotal) {

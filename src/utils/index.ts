@@ -92,3 +92,14 @@ export const withInstall = <T>(component: T, alias?: string) => {
   };
   return component as T & Plugin;
 };
+
+
+export function changeData(value,allData){
+	let selectData=allData.find(o=>o.value==value)
+	if(selectData){
+		return selectData.label
+	}else{
+		return ''
+
+	}
+}
