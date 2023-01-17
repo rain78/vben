@@ -151,7 +151,7 @@
       title: '开关',
       dataIndex: 'name6',
       edit: true,
-      editComponent: 'Switch',
+      editComponent: '',
       editValueMap: (value) => {
         return value ? '开' : '关';
       },

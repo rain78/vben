@@ -209,11 +209,11 @@ export function useTableScroll(
     const tableHeight = unref(tableHeightRef);
     const { canResize, scroll } = unref(propsRef);
     return {
-      x: true,
-      // x: unref(getScrollX),
+      // x: true,
+      x: unref(getScrollX),
       // y: canResize ? tableHeight : null,
       // scrollToFirstRowOnChange: false,
-      // ...scroll,
+      ...scroll,
     };
   });
 

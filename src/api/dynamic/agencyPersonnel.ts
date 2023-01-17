@@ -8,6 +8,14 @@ enum Api {
 
   classList='/clazz/page',
   classEdit='/clazz',
+  classSelect='/clazz/select',
+
+  studentList='/student/page',
+  studentEdit='/student',
+
+  teacherList='/teacher/page',
+  teacherEdit='/teacher',
+
 
 }
 
@@ -24,11 +32,25 @@ export const upSchooldate = (params,type='post') =>{
 export const deleteSchoolData = (params='') => apiHttp.delete({ url: Api.schoolEdit+params })
 
 export const getsClassList = (params) => apiHttp.get({ url: Api.classList, params });
+export const classSelect = (params) => apiHttp.get({ url: Api.classSelect},params);
+
 export const upClassdate = (params,type='post') =>{
   if(type==='post') return apiHttp.post({ url: Api.classEdit, params })
   else return apiHttp.put({ url: Api.classEdit, params })
 }
 export const deleteClassData = (params='') => apiHttp.delete({ url: Api.classEdit+params })
 
+export const getsStudentList = (params) => apiHttp.get({ url: Api.studentList, params });
+export const upStudentdate = (params,type='post') =>{
+  if(type==='post') return apiHttp.post({ url: Api.studentEdit, params })
+  else return apiHttp.put({ url: Api.studentEdit, params })
+}
+export const deleteStudentData = (params='') => apiHttp.delete({ url: Api.studentEdit+params })
 
+export const getTeacherList = (params) => apiHttp.get({ url: Api.teacherList, params });
+export const upTeacherdate = (params,type='post') =>{
+  if(type==='post') return apiHttp.post({ url: Api.teacherEdit, params })
+  else return apiHttp.put({ url: Api.teacherEdit, params })
+}
+export const deleteTeacherData = (params='') => apiHttp.delete({ url: Api.teacherEdit+params })
 

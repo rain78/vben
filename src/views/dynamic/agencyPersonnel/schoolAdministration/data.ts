@@ -3,7 +3,6 @@ import { FormSchema } from '/@/components/Table';
 import { h } from 'vue';
 import { Image } from 'ant-design-vue'
 import { getDictType } from '/@/api/common/index';
-import uploadBtn from './uploadBtn'
 import {CustomUpload } from '/@/components/Upload';
 import { uploadApi } from '/@/api/sys/upload';
 

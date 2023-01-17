@@ -25,7 +25,7 @@
         </Button>
 
         <slot name="advanceBefore"></slot>
-        <Button
+        <!-- <Button
           type="link"
           size="small"
           @click="toggleAdvanced"
@@ -33,7 +33,7 @@
         >
           {{ isAdvanced ? t('component.form.putAway') : t('component.form.unfold') }}
           <BasicArrow class="ml-1" :expand="!isAdvanced" up />
-        </Button>
+        </Button> -->
         <slot name="advanceAfter"></slot>
         <slot name="formBtn"></slot>
 
@@ -123,6 +123,7 @@
       function toggleAdvanced() {
         emit('toggle-advanced');
       }
+        // console.log('useFormContext=>',useFormContext())
 
       return {
         t,

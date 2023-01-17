@@ -50,7 +50,7 @@
         columns: refundTableSchema,
         pagination: false,
         showIndexColumn: false,
-        scroll: { y: 300 },
+        // scroll: { y: 300 },
         showSummary: true,
         summaryFunc: handleSummary,
       });

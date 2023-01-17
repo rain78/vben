@@ -50,7 +50,6 @@
   import { columns,columns1, searchFormSchema } from './menu.data';
 
   export default defineComponent({
-    name: 'MenuManagement',
     components: { BasicTable, TableAction,MenuModal },
     setup() {
       const [registerModal, { openModal }] = useModal();

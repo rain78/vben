@@ -1,15 +1,15 @@
 <template>
-  <!-- <ScrollContainer ref="wrapperRef">
+  <ScrollContainer ref="wrapperRef">
     <div ref="spinRef" :style="spinStyle" v-loading="loading" :loading-tip="loadingTip">
       <slot></slot>
     </div>
-  </ScrollContainer> -->
-  <div  class="spinRefBox">
+  </ScrollContainer>
+  <!-- <div  class="spinRefBox">
     <div ref="spinRef" :style="spinStyle" v-loading="loading" :loading-tip="loadingTip">
       <slot></slot>
     </div>
 
-  </div>
+  </div> -->
 </template>
 <script lang="ts">
   import type { CSSProperties } from 'vue';
@@ -77,9 +77,9 @@
 
       const spinStyle = computed((): CSSProperties => {
         return {
-          height:'auto'
-          // minHeight: `${props.minHeight}px`,
-          // [props.fullScreen ? 'height' : 'maxHeight']: `${unref(realHeightRef)}px`,
+          // height:'auto'
+          minHeight: `${props.minHeight}px`,
+          [props.fullScreen ? 'height' : 'maxHeight']: `${unref(realHeightRef)}px`,
         };
       });
 

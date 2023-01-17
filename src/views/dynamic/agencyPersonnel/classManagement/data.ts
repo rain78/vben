@@ -1,14 +1,9 @@
 import { BasicColumn } from '/@/components/Table';
 import { FormSchema } from '/@/components/Table';
-import { h } from 'vue';
-import { Image } from 'ant-design-vue'
-import { getDictType } from '/@/api/common/index';
-import uploadBtn from './uploadBtn'
-import {CustomUpload } from '/@/components/Upload';
-import { uploadApi } from '/@/api/sys/upload';
+import { getDictType } from '/@/api/common/index';;
 import { parseTime } from '/@/utils/dateUtil';
 import { changeData } from '/@/utils';
-import { schoolSelect } from '/@/api/dynamic/agencyPersonnel';
+import { schoolSelect,classSelect } from '/@/api/dynamic/agencyPersonnel';
 
 const {obj:periodData}=await getDictType({type:'period'})
 
@@ -54,10 +49,42 @@ export const columns: BasicColumn[] = [
 
 export const searchFormSchema: FormSchema[] = [
   {
-    field: 'name',
-    label: '学校名称',
-    component: 'Input',
+    field: 'schoolId',
+    label: '学校',
+    component: 'ApiSelect',
     colProps: { span: 8 },
+    componentProps: ({ formModel, formActionType }) => {
+      return {
+        api: schoolSelect,
+        resultField: 'obj',
+        labelField: 'label',
+        valueField: 'value',
+        onChange: async (e: any) => {
+          const {obj}=await classSelect({schoolId:e})
+          formModel.clazzId = undefined; 
+          const { updateSchema } = formActionType;
+          updateSchema({
+            field: 'clazzId',
+            componentProps: {
+              placeholder: '请选择',
+              options: obj||[],
+            },
+          });
+        },
+      };
+    },
+  },
+  {
+    field: 'clazzId',
+    component: 'Select',
+    label: '班级',
+    colProps: {
+      span: 8,
+    },
+    componentProps: {
+      options: [], // defalut []
+      placeholder: '请先选择学校',
+    },
   },
   
 ];

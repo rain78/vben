@@ -3,7 +3,7 @@
     <BasicTable @register="registerTable">
       <template #form-formBtn>
         <a-button type="primary" @click="handleCreate" class="mr-2">新增</a-button>
-        <!-- <a-button type="primary" @click="getSelectRowList" class="mr-2">获取选中行</a-button> -->
+        <a-button type="danger" @click="doDelete" class="mr-2">删除</a-button>
       </template>
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'action'">
@@ -36,19 +36,19 @@
   import { parseTime } from '/@/utils/dateUtil';
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table';
-  import { getsSchoolList as getList,deleteSchoolData as deleteData } from '/@/api/dynamic/agencyPersonnel';
+  import { getTeacherList as getList,deleteTeacherData as deleteData } from '/@/api/dynamic/agencyPersonnel';
+
 
   import { useModal } from '/@/components/Modal';
   import editModal from './editModal.vue';
 
   import { useMessage } from '/@/hooks/web/useMessage';
-
-  // import { searchFormSchema } from './role.data';
   import { columns, searchFormSchema } from './data';
 
   export default defineComponent({
     components: { BasicTable, editModal, TableAction },
     setup() {
+      const { createConfirm,createMessage } = useMessage();
       const [registerModal, { openModal }] = useModal();
       const [registerTable, { reload, getSelectRows }] = useTable({
         // title: '角色列表',
@@ -64,15 +64,15 @@
         // bordered: true,
         showIndexColumn: false,
         // rowKey: 'id',
-        // rowSelection: {
-        //   type: 'checkbox',
-        // },
+        rowSelection: {
+          type: 'checkbox',
+        },
         actionColumn: {
           // width: 80,
           title: '操作',
           dataIndex: 'action',
           // slots: { customRender: 'action' },
-          fixed: undefined,
+          fixed: 'right',
         },
         fetchSetting:{
           pageField: 'current',
@@ -82,7 +82,8 @@
           listField: 'records',
           // Total number of tables returned by the interface field name
           totalField: 'total',
-        }
+        },
+        scroll: { x: 'max-content' } 
       });
 
       function handleCreate() {
@@ -92,21 +93,29 @@
       }
 
       function handleEdit(record: Recordable) {
+        console.log('record=>',record.teacher.schoolId)
         openModal(true, {
           record,
           isUpdate: true,
         });
       }
 
-      // function getSelectRowList() {
-      //   // createMessage.info('请在控制台查看！');
-      //   console.log(getSelectRows());
-      // }
+      
+
+
+      function doDelete() {
+        const selectData=getSelectRows()
+        if(selectData.length<=0){
+          createMessage.warn(`请至少选中一条数据操作`);
+          return false;
+        }
+        handleDelete({id:selectData.map(o=>o.id).join(',')})
+      }
 
       function handleDelete(record: Recordable) {
-        const selectData=getSelectRows()
+        // const selectData=getSelectRows()
         // console.log(record);
-        const { createConfirm } = useMessage();
+        
         createConfirm({
           iconType: 'warning',
           title: '温馨提示',
@@ -137,7 +146,7 @@
         handleDelete,
         handleSuccess,
         parseTime,
-        // getSelectRowList,
+        doDelete,
       };
     },
   });
