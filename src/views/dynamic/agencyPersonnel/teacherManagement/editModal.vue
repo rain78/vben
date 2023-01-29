@@ -8,7 +8,7 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './data';
-  import { upTeacherdate as update } from '/@/api/dynamic/agencyPersonnel';
+  import { upTeacherdate as update,getTeacherDetail as getDetail} from '/@/api/dynamic/agencyPersonnel';
 
   import { useMessage } from '/@/hooks/web/useMessage';
   export default defineComponent({
@@ -38,6 +38,8 @@
         isUpdate.value = !!data?.isUpdate;
 
         if (unref(isUpdate)) {
+          // console.log('record=>',data.record)
+          // console.log('res=>',res)
           rowId.value = data.record.teacher.id;
           setFieldsValue({
             ...data.record.user,
@@ -45,10 +47,13 @@
             lockFlag: !data.record.user.lockFlag,
           });
         }
+        const {obj}=await getDetail({ id: data.record.teacher.id})
+        // console.log('obj=>',obj)
         updateSchema([
             {
               field: 'clazzIds',
               show: unref(isUpdate),
+              defaultValue:obj.clazzes||[]
             },
           ]);
       });
@@ -63,6 +68,7 @@
           if (unref(isUpdate)) {
             editData = {
               id: rowId.value,
+              clazzIds:values.clazzIds.map(o=>o.id).join(',')
             };
           }
           const {

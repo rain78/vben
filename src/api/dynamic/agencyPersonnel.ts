@@ -15,6 +15,7 @@ enum Api {
 
   teacherList='/teacher/page',
   teacherEdit='/teacher',
+  teacherDetail='/teacher',
 
 
 }
@@ -32,7 +33,7 @@ export const upSchooldate = (params,type='post') =>{
 export const deleteSchoolData = (params='') => apiHttp.delete({ url: Api.schoolEdit+params })
 
 export const getsClassList = (params) => apiHttp.get({ url: Api.classList, params });
-export const classSelect = (params) => apiHttp.get({ url: Api.classSelect},params);
+export const classSelect = (params) => apiHttp.get({ url: Api.classSelect,params});
 
 export const upClassdate = (params,type='post') =>{
   if(type==='post') return apiHttp.post({ url: Api.classEdit, params })
@@ -48,6 +49,7 @@ export const upStudentdate = (params,type='post') =>{
 export const deleteStudentData = (params='') => apiHttp.delete({ url: Api.studentEdit+params })
 
 export const getTeacherList = (params) => apiHttp.get({ url: Api.teacherList, params });
+export const getTeacherDetail = (params) => apiHttp.get({ url: Api.teacherDetail+(params.id?`/${params.id}`:'')});
 export const upTeacherdate = (params,type='post') =>{
   if(type==='post') return apiHttp.post({ url: Api.teacherEdit, params })
   else return apiHttp.put({ url: Api.teacherEdit, params })

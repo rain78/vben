@@ -29,7 +29,8 @@ export default function ({
   const vm = getCurrentInstance();
 
   const { realWidthRef, screenEnum, screenRef } = useBreakpoint();
-
+  // debugger
+  // console.log('getProps=>',getProps)
   const getEmptySpan = computed((): number => {
     if (!advanceState.isAdvanced) {
       return 0;
@@ -64,6 +65,7 @@ export default function ({
   );
 
   function getAdvanced(itemCol: Partial<ColEx>, itemColSum = 0, isLastAction = false) {
+    // console.log(itemCol,itemColSum,isLastAction)
     const width = unref(realWidthRef);
 
     const mdWidth =
@@ -116,6 +118,7 @@ export default function ({
   const fieldsIsAdvancedMap = shallowReactive({});
 
   function updateAdvanced() {
+    
     let itemColSum = 0;
     let realItemColSum = 0;
     const { baseColProps = {} } = unref(getProps);
@@ -156,7 +159,6 @@ export default function ({
 
     // 确保页面发送更新
     vm?.proxy?.$forceUpdate();
-
     advanceState.actionSpan = (realItemColSum % BASIC_COL_LEN) + unref(getEmptySpan);
 
     getAdvanced(unref(getProps).actionColOptions || { span: BASIC_COL_LEN }, itemColSum, true);

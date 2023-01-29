@@ -52,7 +52,7 @@ export const searchFormSchema: FormSchema[] = [
     field: 'schoolId',
     label: '学校',
     component: 'ApiSelect',
-    colProps: { span: 8 },
+    colProps: { xs:24,sm:24,md:12,lg:6,xl:6 },
     componentProps: ({ formModel, formActionType }) => {
       return {
         api: schoolSelect,
@@ -79,7 +79,7 @@ export const searchFormSchema: FormSchema[] = [
     component: 'Select',
     label: '班级',
     colProps: {
-      span: 8,
+      xs:24,sm:24,md:12,lg:6,xl:6,
     },
     componentProps: {
       options: [], // defalut []

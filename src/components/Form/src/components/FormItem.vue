@@ -373,7 +373,10 @@
         }
 
         const { baseColProps = {} } = props.formProps;
-        const realColProps = { ...baseColProps, ...colProps };
+        // console.log('baseColProps=>',baseColProps)
+        // console.log('colProps=>',colProps)
+        const realColProps = { ...baseColProps, ...colProps};
+        // const realColProps = { ...baseColProps, ...colProps,...{xs:24,sm:24,md:12,lg:6,xl:6} };
         const { isIfShow, isShow } = getShow();
         const values = unref(getValues);
 
@@ -388,6 +391,7 @@
 
         return (
           isIfShow && (
+            //:xs="2" :sm="4" :md="6" :lg="8" :xl="10"
             <Col {...realColProps} v-show={isShow}>
               {getContent()}
             </Col>

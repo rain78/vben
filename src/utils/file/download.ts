@@ -1,6 +1,7 @@
 import { openWindow } from '..';
 import { dataURLtoBlob, urlToBase64 } from './base64Conver';
-
+import JSZip from 'jszip'
+import FileSaver from 'file-saver'
 /**
  * Download online pictures
  * @param url
@@ -93,4 +94,44 @@ export function downloadByUrl({
 
   openWindow(url, { target });
   return true;
+}
+
+export function downLoadSigleFile (file) {
+  let num = file.url.lastIndexOf("/") + 1;
+  let fileName = file.url.substring(num).split("?")[0];
+  let fileSrc = '/upload/' + fileName;
+  let name = fileName+'.'+file.suffix
+  Promise.resolve().then(() => {
+    return fetch(file.url+'?time='+(new Date().valueOf())).then(resp => resp.blob())
+    // return fetch(fileSrc).then(resp => resp.blob())
+  }).then((blob) => {
+	  const url = URL.createObjectURL(blob);
+	  const a = document.createElement("a");
+	  a.download = name ;
+	  a.href = url;
+	  a.click();
+	  a.remove();
+	  URL.revokeObjectURL(url);
+  })
+}
+
+
+export function downloadZip (files) {
+  let zip = new JSZip();
+  let folder = zip.folder('files');
+  let filename='素材'+new Date()+'.zip'
+  Promise.resolve().then(() => {
+    return files.reduce((accumulator, item) => {
+		let num = item.url.lastIndexOf("/") + 1;
+		let fileName = item.url.substring(num).split("?")[0];
+		let imgSrc = '/upload/' + fileName;
+		let name = fileName+'.'+item.suffix
+      return accumulator.then(() => fetch(item.url+'?time='+(new Date().valueOf()))//这里加上时间戳就可以
+      // return accumulator.then(() => fetch(imgSrc)
+                        .then(resp => resp.blob())
+                        .then(blob => folder.file(name, blob)))
+    }, Promise.resolve())
+  }).then(() => {
+    folder.generateAsync({type: "blob"}).then(content => FileSaver.saveAs(content, filename));
+  })
 }

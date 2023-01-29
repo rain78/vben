@@ -137,6 +137,8 @@ export interface TableSetting {
 }
 
 export interface BasicTableProps<T = any> {
+  //阴影
+  boxShadow?: boolean,
   // 点击行选中
   clickToRowSelect?: boolean;
   isTreeTable?: boolean;

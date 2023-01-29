@@ -29,7 +29,7 @@ export const basicProps = {
   },
   showTableSetting: Boolean,
   autoCreateKey: { type: Boolean, default: true },
-  striped: { type: Boolean, default: true },
+  striped: { type: Boolean, default: false },
   showSummary: Boolean,
   summaryFunc: {
     type: [Function, Array] as PropType<(...arg: any[]) => any[]>,
@@ -88,6 +88,7 @@ export const basicProps = {
     default: () => [],
   },
   showIndexColumn: { type: Boolean, default: true },
+  boxShadow: { type: Boolean, default: true },
   indexColumnProps: {
     type: Object as PropType<BasicColumn>,
     default: null,

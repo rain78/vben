@@ -1,89 +1,41 @@
 <template>
-  <div class="p-2">
-    <div class="p-4 mb-2 bg-white">
-      <BasicForm @register="registerForm" />
-    </div>
-    <div class="p-2 bg-white">
-      <List
-        :grid="{ gutter: 5, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: grid }"
-        :data-source="data"
-        :pagination="paginationProp"
-      >
-        <template #header>
-          <div class="flex justify-end space-x-2"
-            ><slot name="header"></slot>
-            <Tooltip>
-              <template #title>
-                <div class="w-50">每行显示数量</div
-                ><Slider
-                  id="slider"
-                  v-bind="sliderProp"
-                  v-model:value="grid"
-                  @change="sliderChange"
-              /></template>
-              <Button><TableOutlined /></Button>
-            </Tooltip>
-            <Tooltip @click="fetch">
-              <template #title>刷新</template>
-              <Button><RedoOutlined /></Button>
-            </Tooltip>
-          </div>
-        </template>
-        <template #renderItem="{ item }">
-          <ListItem>
-            <Card>
-              <template #title></template>
-              <template #cover>
-                <div :class="height">
-                  <Image :src="item.imgs[0]" />
-                </div>
-              </template>
-              <template #actions>
-                <!--              <SettingOutlined key="setting" />-->
-                <EditOutlined key="edit" />
-                <Dropdown
-                  :trigger="['hover']"
-                  :dropMenuList="[
-                    {
-                      text: '删除',
-                      event: '1',
-                      popConfirm: {
-                        title: '是否确认删除',
-                        confirm: handleDelete.bind(null, item.id),
-                      },
-                    },
-                  ]"
-                  popconfirm
-                >
-                  <EllipsisOutlined key="ellipsis" />
-                </Dropdown>
-              </template>
-
-              <CardMeta>
-                <template #title>
-                  <TypographyText :content="item.name" :ellipsis="{ tooltip: item.address }" />
-                </template>
-                <template #avatar>
-                  <Avatar :src="item.avatar" />
-                </template>
-                <template #description>{{ item.time }}</template>
-              </CardMeta>
-            </Card>
-          </ListItem>
-        </template>
-      </List>
+  <div class="cardList">
+    <div :class="boxShadow ? 'cardListBox' : ''">
+      <div class="p-2 bg-white">
+        <div class="">
+          <BasicForm @register="registerForm" v-bind="getFormProps">
+            <!-- <template #form-formBtn>
+              <a-button color="success" @click="handleCreate" class="mr-2">新增</a-button>
+              <a-button type="danger" @click="doDelete" class="mr-2">删除</a-button>
+            </template> -->
+            <template #formBtn="data">
+              <slot name="formBtn" v-bind="data || {}"></slot>
+            </template>
+          </BasicForm>
+        </div>
+        <Divider class="cardListDivider" />
+        <div class="p-2">
+          <List :grid="gridData" :data-source="data" :pagination="paginationProp">
+            <template #renderItem="{ item, index }">
+              <ListItem>
+                <component
+                  :is="card"
+                  :data="item"
+                  :index="index"
+                  @select="handleSelect"
+                ></component>
+              </ListItem>
+            </template>
+          </List>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-  import { computed, onMounted, ref } from 'vue';
-  import {
-    EditOutlined,
-    EllipsisOutlined,
-    RedoOutlined,
-    TableOutlined,
-  } from '@ant-design/icons-vue';
-  import { List, Card, Image, Typography, Tooltip, Slider, Avatar } from 'ant-design-vue';
+  import { computed, onMounted, ref, reactive } from 'vue';
+  import { EditOutlined, EllipsisOutlined, RedoOutlined, TableOutlined } from '@ant-design/icons-vue';
+  import { List, Card, Image, Typography, Tooltip, Slider, Avatar, Divider } from 'ant-design-vue';
   import { Dropdown } from '/@/components/Dropdown';
   import { BasicForm, useForm } from '/@/components/Form';
   import { propTypes } from '/@/utils/propTypes';
@@ -99,13 +51,43 @@
   const props = defineProps({
     // 请求API的参数
     params: propTypes.object.def({}),
+    card: propTypes.object.def({}),
     //api
     api: propTypes.func,
+    boxShadow: { type: Boolean, default: true },
+    searchFormSchema: propTypes.object.def([]),
+    actionColOptions: propTypes.object.def({}),
+    fetchSetting: {
+      type: Object,
+      default: {
+        pageField: 'current',
+        // The number field name of each page displayed in the background
+        sizeField: 'size',
+        // Field name of the form data returned by the interface
+        listField: 'records',
+        // Total number of tables returned by the interface field name
+        totalField: 'total',
+      },
+    },
+    gridData: {
+      type: Object,
+      default: {
+        gutter: 10,
+        xs: 1,
+        sm: 2,
+        md: 4,
+        lg: 6,
+        xl: 6,
+        xxl: 6,
+      },
+    },
   });
   //暴露内部方法
   const emit = defineEmits(['getMethod', 'delete']);
   //数据
   const data = ref([]);
+  const selectData = [];
+  // const selectData=reactive([])
   // 切换每行个数
   // cover图片自适应高度
   //修改pageSize并重新请求数据
@@ -113,14 +95,17 @@
   const height = computed(() => {
     return `h-${120 - grid.value * 6}`;
   });
-  //表单
-  const [registerForm, { validate }] = useForm({
-    schemas: [{ field: 'type', component: 'Input', label: '类型' }],
-    labelWidth: 80,
-    baseColProps: { span: 6 },
-    actionColOptions: { span: 24 },
-    autoSubmitOnEnter: true,
-    submitFunc: handleSubmit,
+
+  const [registerForm, { validate, setProps }] = useForm();
+  const getFormProps = computed((): Partial<FormProps> => {
+    return {
+      schemas: props.searchFormSchema,
+      rowProps: { gutter: 24 },
+      submitFunc: handleSubmit,
+      // actionColOpt:{span:18},
+      actionColOptions: props.actionColOptions,
+      autoSubmitOnEnter: true,
+    };
   });
   //表单提交
   async function handleSubmit() {
@@ -131,20 +116,48 @@
     pageSize.value = n * 4;
     fetch();
   }
-
-  // 自动请求并暴露内部方法
   onMounted(() => {
     fetch();
-    emit('getMethod', fetch);
+    emit('getMethod', fetch, 'reload');
+    emit('getMethod', handleDel, 'delete');
   });
 
   async function fetch(p = {}) {
-    const { api, params } = props;
+    const { api, params, fetchSetting } = props;
+    setProps({
+      submitButtonOptions: {
+        disabled: true,
+        loading: true,
+      },
+    });
     if (api && isFunction(api)) {
-      const res = await api({ ...params, page: page.value, pageSize: pageSize.value, ...p });
-      data.value = res.items;
-      total.value = res.total;
+      const { obj } = await api({
+        ...params,
+        [fetchSetting.pageField]: page.value,
+        [fetchSetting.sizeField]: pageSize.value,
+        ...p,
+      });
+      data.value = obj[fetchSetting.listField];
+      total.value = obj[fetchSetting.totalField];
+      setProps({
+        submitButtonOptions: {
+          disabled: false,
+          loading: false,
+        },
+      });
     }
+  }
+
+  function handleSelect(data, index, flag) {
+    if (flag) {
+      selectData[index] = data;
+    } else {
+      selectData[index] = null;
+    }
+  }
+
+  function handleDel() {
+    return selectData;
   }
   //分页相关
   const page = ref(1);
@@ -171,7 +184,50 @@
     fetch();
   }
 
-  async function handleDelete(id) {
-    emit('delete', id);
-  }
+  // async function handleDelete(id) {
+  //   emit('delete', id);
+  // }
 </script>
+<style >
+  .cardListDivider {
+    margin: 0px 0px 10px 0px;
+  }
+  .cardListItem .ant-card-body {
+    padding: 0 !important;
+  }
+</style>
+
+<style lang="less" scoped>
+  .cardListItem {
+    .cardBox {
+      position: relative;
+      .cardImg {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        aspect-ratio: 1/1;
+        .cardImglist {
+          max-width: 100%;
+          max-height: 100%;
+        }
+      }
+
+      .cardText {
+        padding: 10px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+  }
+
+  .cardList {
+    padding: 16px;
+    box-sizing: border-box;
+    .cardListBox {
+      box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%),
+        0 1px 5px 0 rgb(0 0 0 / 20%);
+    }
+  }
+</style>

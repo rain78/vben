@@ -52,7 +52,7 @@ export const searchFormSchema: FormSchema[] = [
     field: 'name',
     label: '学校名称',
     component: 'Input',
-    colProps: { span: 8 },
+    colProps: { xs:24,sm:24,md:12,lg:6,xl:6 },
   },
   
 ];

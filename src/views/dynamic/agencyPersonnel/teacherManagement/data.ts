@@ -93,7 +93,10 @@ export const searchFormSchema: FormSchema[] = [
     field: 'schoolId',
     label: '学校',
     component: 'Select',
-    colProps: { span: 8 },
+    // colProps: { span: 8 },
+    colProps: {
+      xs:24,sm:24,md:12,lg:6,xl:6
+    },
     componentProps: ({ formModel, formActionType }) => {
       return {
         options: schoolData,
@@ -117,7 +120,7 @@ export const searchFormSchema: FormSchema[] = [
     component: 'Select',
     label: '班级',
     colProps: {
-      span: 8,
+      xs:24,sm:24,md:12,lg:6,xl:6
     },
     componentProps: {
       options: [], // defalut []
@@ -241,6 +244,7 @@ export const formSchema: FormSchema[] = [
         schoolId:model['schoolId'],
         value:model[field],
         onChange: (value: string) => {
+          // console.log('onChange=>',value)
           model[field] = value;
         },
 

@@ -2,7 +2,7 @@
   <div>
     <BasicTable @register="registerTable" @fetch-success="onFetchSuccess">
       <template #form-formBtn>
-        <a-button type="primary" @click="handleCreate"> 新增菜单 </a-button>
+        <a-button color="success" @click="handleCreate"> 新增菜单 </a-button>
       </template>
       <!-- <template #toolbar>
         <a-button type="primary" @click="handleCreate"> 新增菜单 </a-button>

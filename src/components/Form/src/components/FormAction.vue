@@ -13,13 +13,15 @@
           {{ getResetBtnOptions.text }}
         </Button> -->
         <slot name="submitBefore"></slot>
-
+        <!-- preIcon="mdi:magnify" -->
         <Button
           type="primary"
           class="mr-2"
+          preIcon="mdi:magnify"
           v-bind="getSubmitBtnOptions"
           @click="submitAction"
           v-if="showSubmitButton"
+          :iconSize="16"
         >
           {{ getSubmitBtnOptions.text }}
         </Button>
@@ -36,7 +38,6 @@
         </Button> -->
         <slot name="advanceAfter"></slot>
         <slot name="formBtn"></slot>
-
       </FormItem>
     </div>
   </a-col>
@@ -89,10 +90,9 @@
 
       const actionColOpt = computed(() => {
         const { showAdvancedButton, actionSpan: span, actionColOptions } = props;
+        // console.log(showAdvancedButton, span, actionColOptions)
         const actionSpan = 24 - span;
-        const advancedSpanObj = showAdvancedButton
-          ? { span: actionSpan < 6 ? 24 : actionSpan }
-          : {};
+        const advancedSpanObj = showAdvancedButton ? { span: actionSpan < 6 ? 24 : actionSpan } : {};
         const actionColOpt: Partial<ColEx> = {
           style: { textAlign: 'right' },
           span: showAdvancedButton ? 6 : 4,
@@ -123,7 +123,7 @@
       function toggleAdvanced() {
         emit('toggle-advanced');
       }
-        // console.log('useFormContext=>',useFormContext())
+      // console.log('useFormContext=>',useFormContext())
 
       return {
         t,

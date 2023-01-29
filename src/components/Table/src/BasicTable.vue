@@ -1,6 +1,6 @@
 <template>
   <div ref="wrapRef" :class="getWrapperClass">
-    <div class="vben-basic-table-form-containe-box">
+    <div :class="boxShadow?'vben-basic-table-form-containe-box':''">
       <BasicForm
       ref="formRef"
       submitOnReset
@@ -15,7 +15,7 @@
         <slot :name="item" v-bind="data || {}"></slot>
       </template>
     </BasicForm>
-
+    <Divider class="tableDivider"/>
     <Table
       ref="tableElRef"
       v-bind="getBindValues"
@@ -32,6 +32,7 @@
       </template>
       <!-- 增加对antdv3.x兼容 -->
       <template #bodyCell="data">
+        <!-- {{data}} -->
         <slot name="bodyCell" v-bind="data || {}"></slot>
       </template>
       <!--      <template #[`header-${column.dataIndex}`] v-for="(column, index) in columns" :key="index">-->
@@ -51,7 +52,7 @@
   } from './types/table';
 
   import { defineComponent, ref, computed, unref, toRaw, inject, watchEffect } from 'vue';
-  import { Table } from 'ant-design-vue';
+  import { Table,Divider } from 'ant-design-vue';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { PageWrapperFixedHeightKey } from '/@/components/Page';
   import HeaderCell from './components/HeaderCell.vue';
@@ -84,6 +85,7 @@
       Table,
       BasicForm,
       HeaderCell,
+      Divider
     },
     props: basicProps,
     emits: [
@@ -241,7 +243,7 @@
 
       const { getFormProps, replaceFormSlotKey, getFormSlotKeys, handleSearchInfoChange } =
         useTableForm(getProps, slots, fetch, getLoading);
-      // console.log('getFormSlotKeys=>',getFormSlotKeys)
+      // console.log('getFormProps=>',getFormProps)
       const getBindValues = computed(() => {
         const dataSource = unref(getDataSourceRef);
         // console.log('columns=>',toRaw(unref(getViewColumns)))
@@ -360,6 +362,11 @@
     },
   });
 </script>
+<style >
+.tableDivider{
+  margin: 0px !important;
+}
+</style>
 <style lang="less">
   @border-color: #cecece4d;
 
@@ -375,7 +382,9 @@
   background-color: #fff;
   // background-color: @app-content-background;
   box-shadow:0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%), 0 1px 5px 0 rgb(0 0 0 / 20%);
+
 }
+
   .@{prefix-cls} {
     max-width: 100%;
     height: 100%;
@@ -406,7 +415,8 @@
     }
 
     .ant-table-wrapper {
-      padding: 6px;
+      padding: 0 6px 6px 6px;
+      // padding: 6px;
       // background-color: @component-background;
       border-radius: 2px;
 

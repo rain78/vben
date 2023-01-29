@@ -2,7 +2,7 @@
   <div>
     <BasicTable @register="registerTable">
       <template #form-formBtn>
-        <a-button type="primary" @click="handleCreate" class="mr-2">新增</a-button>
+        <a-button color="success" @click="handleCreate" class="mr-2">新增</a-button>
         <!-- <a-button type="primary" @click="getSelectRowList" class="mr-2">获取选中行</a-button> -->
       </template>
       <template #bodyCell="{ column, record }">
@@ -10,6 +10,7 @@
           <!-- {{column}} -->
 
           <TableAction
+          stopButtonPropagation
             :actions="[
               {
                 label: '编辑',
@@ -55,7 +56,7 @@
         api: getList,
         columns,
         formConfig: {
-          labelWidth: 120,
+          rowProps:{gutter:24},
           schemas: searchFormSchema,
         },
         useSearchForm: true,

@@ -6,7 +6,7 @@
     :model="formModel"
     @keypress.enter="handleEnterPress"
   >
-    <Row v-bind="getRow">
+    <Row v-bind="getRow" >
       <slot name="formHeader"></slot>
       <template v-for="schema in getSchema" :key="schema.field">
         <FormItem
@@ -49,6 +49,7 @@
   import type { FormActionType, FormProps, FormSchema } from './types/form';
   import type { AdvanceState } from './types/hooks';
   import type { Ref } from 'vue';
+  import { Icon } from '/@/components/Icon';
 
   import { defineComponent, reactive, ref, computed, unref, onMounted, watch, nextTick } from 'vue';
   import { Form, Row } from 'ant-design-vue';
@@ -76,7 +77,7 @@
 
   export default defineComponent({
     name: 'BasicForm',
-    components: { FormItem, Form, Row, FormAction },
+    components: { FormItem, Form, Row, FormAction,Icon },
     props: basicProps,
     emits: ['advanced-change', 'reset', 'submit', 'register', 'field-value-change'],
     setup(props, { emit, attrs }) {
@@ -147,6 +148,7 @@
             schemas.filter((schema) => schema.component !== 'Divider') as FormSchema[],
           );
         } else {
+          // console.log('getSchema=>',schemas)
           return cloneDeep(schemas as FormSchema[]);
         }
       });
