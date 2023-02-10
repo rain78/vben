@@ -11,7 +11,7 @@
         <inbox-outlined></inbox-outlined>
       </p>
       <p class="ant-upload-text">拖拽文件于或者<em>点击上传</em></p>
-      <p class="ant-upload-hint"> 支持类型:.txt </p>
+      <p class="ant-upload-hint"> 支持类型</p>
       <template #itemRender="{ file, actions }">
         <div class="fileList">
             <span>{{ file.name }}</span>
@@ -44,7 +44,9 @@
         emit('success', fileList.value);
       }
 
-      const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {});
+      const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
+        fileList.value=[]
+      });
 
       return {
         handleSubmit,

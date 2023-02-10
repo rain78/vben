@@ -2,8 +2,11 @@
   <div :class="[prefixCls, `${prefixCls}--${theme}`]">
     <a-breadcrumb :routes="routes" separator=">">
       <template #itemRender="{ route, routes: routesMatched, paths }">
-        <Icon :icon="getIcon(route)" v-if="getShowBreadCrumbIcon && getIcon(route) &&route.index==0" />
-        
+        <Icon
+          :icon="getIcon(route)"
+          v-if="getShowBreadCrumbIcon && getIcon(route) && route.index == 0"
+        />
+
         <span v-if="!hasRedirect(routesMatched, route)">
           {{ route.meta.name }}
         </span>
@@ -52,7 +55,7 @@
 
       const { t } = useI18n();
       watchEffect(async () => {
-      //  console.log(currentRoute.value,REDIRECT_NAME)
+        //  console.log(currentRoute.value,REDIRECT_NAME)
         if (currentRoute.value.name === REDIRECT_NAME) return;
         const menus = await getMenus();
 
@@ -66,7 +69,6 @@
         const parent = getAllParentPath(menus, path);
 
         const filterMenus = menus.filter((item) => item.path === parent[0]);
-        
 
         const matched = getMatched(filterMenus, parent) as any;
         if (!matched || matched.length === 0) return;
@@ -78,14 +80,13 @@
           breadcrumbList.push({
             ...currentRoute.value,
             name: currentRoute.value.meta?.name || '',
-            
           } as unknown as RouteLocationMatched);
         }
         // console.log('breadcrumbList=>',breadcrumbList)
-        breadcrumbList.forEach((val,index)=>{
-          val.children=[]
-          val.index=index
-        })
+        breadcrumbList.forEach((val, index) => {
+          // val.children=[]
+          val.index = index;
+        });
         // console.log('breadcrumbList=>',breadcrumbList)
         routes.value = breadcrumbList;
       });
@@ -113,7 +114,7 @@
             return false;
             // return !!name;
           }
-          const { title, hideBreadcrumb, hideMenu,name } = meta;
+          const { title, hideBreadcrumb, hideMenu, name } = meta;
           if (!name || hideBreadcrumb || hideMenu) {
             return false;
           }
@@ -170,7 +171,8 @@
     // padding: 0 8px;
     align-items: center;
     background-color: #fff;
-    box-shadow:0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%), 0 1px 5px 0 rgb(0 0 0 / 20%);
+    box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 12%),
+      0 1px 5px 0 rgb(0 0 0 / 20%);
 
     .ant-breadcrumb-link {
       .anticon {

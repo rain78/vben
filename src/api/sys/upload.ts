@@ -1,10 +1,10 @@
 import { UploadApiResult } from './model/uploadModel';
-import { apiHttp } from '/@/utils/http/axios';
+import { apiHttp ,api as uploadUrl} from '/@/utils/http/axios';
 import { UploadFileParams } from '/#/axios';
 import { useGlobSetting } from '/@/hooks/setting';
 
 // const { uploadUrl = '' } = useGlobSetting();
-const uploadUrl='http://ioteduendpoint.stepiot.com/file'
+// const uploadUrl='http://ioteduendpoint.stepiot.com/file'
 
 /**
  * @description: Upload interface
@@ -15,7 +15,7 @@ export function uploadApi(
 ) {
   return apiHttp.uploadFile(
     {
-      url: uploadUrl,
+      url: uploadUrl+'/file',
       // onUploadProgress,
     },
     params,

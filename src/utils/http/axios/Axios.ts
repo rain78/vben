@@ -148,8 +148,8 @@ export class VAxios {
     // 
 
     return this.axiosInstance.request<T>({
-      ...config,
       method: 'POST',
+      ...config,
       data: params,
       headers: {
         'Content-type': ContentTypeEnum.FORM_DATA,
@@ -208,9 +208,10 @@ export class VAxios {
     //   config.method?.toUpperCase() === RequestEnum.GET
     // ) {
     if (
-        contentType !== ContentTypeEnum.FORM_URLENCODED ||
-        config.method?.toUpperCase() === RequestEnum.GET
-      ) {
+      contentType !== ContentTypeEnum.FORM_URLENCODED ||
+      config.method?.toUpperCase() === RequestEnum.GET 
+    ) {
+      
       return config;
     }
     return {
@@ -226,10 +227,20 @@ export class VAxios {
   post<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
     // debugger
     // console.log('post=>',options,config)
-    return this.request({ ...config, method: 'POST' ,headers: {
-      'Content-Type': ContentTypeEnum.FORM_URLENCODED,
-    }}, options);
+    return this.request({
+      headers: {
+        'Content-Type': ContentTypeEnum.FORM_URLENCODED,
+      },...config, method: 'POST', 
+    }, options);
   }
+
+  // post2<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+  //   return this.request({
+  //     ...config, method: 'POST2', headers: {
+  //       'Content-Type': ContentTypeEnum.FORM_DATA,
+  //     }
+  //   }, options);
+  // }
 
   post1<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'POST' }, options);
@@ -237,11 +248,14 @@ export class VAxios {
 
   put<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
     // this.setHeader({headers: { 'Content-Type': ContentTypeEnum.FORM_URLENCODED }})
-    return this.request({ ...config, method: 'PUT',headers: {
-      'Content-Type': ContentTypeEnum.FORM_URLENCODED,
-    } }, options);
+   
+    return this.request({
+      ...config, method: 'PUT', headers: {
+        'Content-Type': ContentTypeEnum.FORM_URLENCODED,
+      }
+    }, options);
   }
- 
+
   put1<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'PUT' }, options);
   }

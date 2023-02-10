@@ -4,7 +4,11 @@
     <LayoutHeader v-if="getShowInsetHeaderRef" />
     <!-- <MultipleTabs v-if="getShowTabs" /> -->
     <!-- <div>dddd</div> -->
-    <LayoutBreadcrumb v-if="getShowContent && getShowBread" :theme="getHeaderTheme" />
+    <LayoutBreadcrumb v-if="getShowContent && getShowBread" :theme="getHeaderTheme">
+      <!-- <template v-slot:BreadcrumbRight>
+        <slot name="BreadcrumbRight"></slot>
+      </template> -->
+    </LayoutBreadcrumb>
   </div>
 </template>
 <script lang="ts">
@@ -21,14 +25,12 @@
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useLayoutHeight } from '../content/useContentViewHeight';
 
- import {  LayoutBreadcrumb} from '/@/layouts/default/header/components';
-  const HEADER_HEIGHT=64;
-;
-
+  import { LayoutBreadcrumb } from '/@/layouts/default/header/components';
+  const HEADER_HEIGHT = 64;
   const TABS_HEIGHT = 32;
   export default defineComponent({
     name: 'LayoutMultipleHeader',
-    components: { LayoutHeader, MultipleTabs ,LayoutBreadcrumb},
+    components: { LayoutHeader, MultipleTabs, LayoutBreadcrumb },
     setup() {
       const { setHeaderHeight } = useLayoutHeight();
       const { prefixCls } = useDesign('layout-multiple-header');
@@ -42,7 +44,7 @@
         getHeaderTheme,
         getShowHeader,
         getShowContent,
-        getShowBread
+        getShowBread,
       } = useHeaderSetting();
 
       const { getFullContent } = useFullContent();
@@ -110,7 +112,7 @@
         getShowInsetHeaderRef,
         getShowContent,
         getShowBread,
-        getHeaderTheme
+        getHeaderTheme,
       };
     },
   });

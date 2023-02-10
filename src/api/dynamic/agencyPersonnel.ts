@@ -34,6 +34,7 @@ export const deleteSchoolData = (params='') => apiHttp.delete({ url: Api.schoolE
 
 export const getsClassList = (params) => apiHttp.get({ url: Api.classList, params });
 export const classSelect = (params) => apiHttp.get({ url: Api.classSelect,params});
+export const classStu = (params) => apiHttp.get({ url: `${Api.classEdit}/${params.clazzId}`,});
 
 export const upClassdate = (params,type='post') =>{
   if(type==='post') return apiHttp.post({ url: Api.classEdit, params })

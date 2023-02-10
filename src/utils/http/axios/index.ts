@@ -1,6 +1,5 @@
 // axios配置  可自行根据项目进行更改，只需更改该文件即可，其他文件可以不动
 // The axios configuration can be changed according to the project, just change the file, other files can be left unchanged
-
 import type { AxiosResponse } from 'axios';
 import { clone } from 'lodash-es';
 import type { RequestOptions, Result } from '/#/axios';
@@ -288,9 +287,11 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
 export const defHttp = createAxios();
 
 // other api url
+export const api='http://ioteduendpoint.stepiot.com'
+
 export const apiHttp = createAxios({
   requestOptions: {
-    apiUrl: 'http://ioteduendpoint.stepiot.com',
+    apiUrl: api,
     urlPrefix: '',
   },
 });

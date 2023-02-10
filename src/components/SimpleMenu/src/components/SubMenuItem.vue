@@ -145,6 +145,8 @@
 
       const getAccordion = computed(() => rootProps.accordion);
       const getCollapse = computed(() => rootProps.collapse);
+      // console.log('getCollapse=>',rootProps.collapse)
+
       const getTheme = computed(() => rootProps.theme);
 
       const getOverlayStyle = computed((): CSSProperties => {

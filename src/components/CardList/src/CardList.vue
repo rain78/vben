@@ -1,19 +1,16 @@
 <template>
   <div class="cardList">
-    <div :class="boxShadow ? 'cardListBox' : ''">
-      <div class="p-2 bg-white">
+    <div>
+      <!-- <div :class="boxShadow ? 'cardListBox' : ''"> -->
+      <div class="p-2">
         <div class="">
-          <BasicForm @register="registerForm" v-bind="getFormProps">
-            <!-- <template #form-formBtn>
-              <a-button color="success" @click="handleCreate" class="mr-2">新增</a-button>
-              <a-button type="danger" @click="doDelete" class="mr-2">删除</a-button>
-            </template> -->
+          <BasicForm @register="registerForm" v-bind="getFormProps" v-show="BasicFormShow">
             <template #formBtn="data">
               <slot name="formBtn" v-bind="data || {}"></slot>
             </template>
           </BasicForm>
         </div>
-        <Divider class="cardListDivider" />
+        <Divider class="cardListDivider" v-if="BasicFormShow" />
         <div class="p-2">
           <List :grid="gridData" :data-source="data" :pagination="paginationProp">
             <template #renderItem="{ item, index }">
@@ -23,7 +20,12 @@
                   :data="item"
                   :index="index"
                   @select="handleSelect"
-                ></component>
+                  :key="item.id || index"
+                >
+                  <template #[item]="data" v-for="item in Object.keys($slots)">
+                    <slot :name="item" v-bind="data || {}"></slot>
+                  </template>
+                </component>
               </ListItem>
             </template>
           </List>
@@ -56,7 +58,10 @@
     api: propTypes.func,
     boxShadow: { type: Boolean, default: true },
     searchFormSchema: propTypes.object.def([]),
+    paginationProp:{ type: Boolean, default: true },
     actionColOptions: propTypes.object.def({}),
+    BasicFormShow: { type: Boolean, default: true },
+    showSubmitButton: { type: Boolean, default: true },
     fetchSetting: {
       type: Object,
       default: {
@@ -102,6 +107,7 @@
       schemas: props.searchFormSchema,
       rowProps: { gutter: 24 },
       submitFunc: handleSubmit,
+      showSubmitButton: props.showSubmitButton,
       // actionColOpt:{span:18},
       actionColOptions: props.actionColOptions,
       autoSubmitOnEnter: true,
@@ -120,7 +126,17 @@
     fetch();
     emit('getMethod', fetch, 'reload');
     emit('getMethod', handleDel, 'delete');
+    emit('getMethod', getSelect, 'select');
   });
+
+  function GetProperty(obj, str) {
+    str = str.replace(/\[(\w+)\]/g, '.$1'); // 处理数组下标
+    let arr = str.split('.');
+    for (let i in arr) {
+      obj = obj[arr[i]] || '';
+    }
+    return obj;
+  }
 
   async function fetch(p = {}) {
     const { api, params, fetchSetting } = props;
@@ -132,13 +148,13 @@
     });
     if (api && isFunction(api)) {
       const { obj } = await api({
-        ...params,
         [fetchSetting.pageField]: page.value,
         [fetchSetting.sizeField]: pageSize.value,
+        ...params,
         ...p,
       });
-      data.value = obj[fetchSetting.listField];
-      total.value = obj[fetchSetting.totalField];
+      data.value = fetchSetting.listField?GetProperty(obj, fetchSetting.listField):obj;
+      total.value = fetchSetting.totalField?GetProperty(obj, fetchSetting.totalField):0;
       setProps({
         submitButtonOptions: {
           disabled: false,
@@ -156,14 +172,18 @@
     }
   }
 
+  function getSelect() {
+    return selectData;
+  }
+
   function handleDel() {
     return selectData;
   }
   //分页相关
   const page = ref(1);
-  const pageSize = ref(36);
+  const pageSize = ref(props.params.size || 30);
   const total = ref(0);
-  const paginationProp = ref({
+  const paginationProp = ref(props.paginationProp&&{
     showSizeChanger: false,
     showQuickJumper: true,
     pageSize,

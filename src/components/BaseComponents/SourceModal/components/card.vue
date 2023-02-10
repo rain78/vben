@@ -6,30 +6,30 @@
         <Icon icon="mdi:checkbox-blank-circle-outline" v-else />
       </div>
       <div class="cardImg" @click="goDetail">
-        <Image class="cardImglist" :src="data.sourceMaterialCoverUrl" :preview="false" />
-      </div>
-      <div class="cardText">
-        <div>{{ index + 1 }}.{{ data.name }}</div>
-        <div>{{ data.grade }}</div>
+        <Image class="cardImglist" :src="data.url" :preview="false" v-if="data.suffix!='mp4'&&data.suffix!='mov'"/>
+       
+        <video class="cardVideolist"  v-else>
+          <source :src="data.url" type="video/mp4" >
+        </video>
       </div>
     </div>
   </Card>
 </template>
 <script lang="ts">
-  import { defineComponent, ref, computed, unref } from 'vue';
+  import { defineComponent, ref } from 'vue';
   import { Card, Image } from 'ant-design-vue';
-    import { Icon } from '/@/components/Icon';
-
+  import { Icon } from '/@/components/Icon';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { router } from '/@/router';
   export default defineComponent({
-    name: 'laborCoursesCard',
     components: { Card, Image ,Icon},
     props: ['data', 'index'],
     emits: ['select',],
     setup(props, { emit }) {
       const idSelect=ref(false)
       function goDetail(){
-        alert('goDetail')
+        const {data}=props
+        // router.push('/sourceMaterial/sourceManagement/detail/'+data.id)
       }
 
       function doSelect(){
@@ -61,7 +61,7 @@
         top: 5px;
         left: 5px;
         color:  @primary-color;
-        z-index: 999;
+        z-index: 9;
         cursor: pointer;
 
         // font-size: 30px;
@@ -71,12 +71,16 @@
         justify-content: center;
         align-items: center;
         width: 100%;
-        aspect-ratio: 1/1;
+        aspect-ratio: 1/1 !important;
         cursor: pointer;
 
         .cardImglist {
           max-width: 100%;
           max-height: 100%;
+        }
+        .cardVideolist{
+          max-width: 100% !important;
+          max-height: 100% !important;
         }
       }
 

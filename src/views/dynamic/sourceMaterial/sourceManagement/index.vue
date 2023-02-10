@@ -7,6 +7,7 @@
       :api="getList"
       @get-method="getMethod"
       :card="card"
+      :showSubmitButton="false"
       :gridData="{
         gutter: 10,
         xs: 1,
@@ -41,9 +42,6 @@
 <script lang="ts" setup>
   import { CardList } from '/@/components/CardList';
   import { Button } from '/@/components/Button';
-  import { PageWrapper } from '/@/components/Page';
-  import { demoListApi } from '/@/api/demo/table';
-  import { Icon } from '/@/components/Icon';
   import { CommonUpload } from '/@/components/Upload';
   import { useModal } from '/@/components/Modal';
   import {downloadZip} from '/@/utils/file/download';
@@ -58,8 +56,8 @@
     upLoadSourceMaterial as upload,
   } from '/@/api/dynamic/sourceMaterial';
   import { useMessage } from '/@/hooks/web/useMessage';
-  import { searchFormSchema } from './data';
-  import card from './card.vue';
+  // import { searchFormSchema } from './data';
+  import card from './components/card.vue';
 import { func } from 'vue-types';
   const { createConfirm, createMessage } = useMessage();
 

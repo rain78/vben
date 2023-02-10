@@ -24,7 +24,9 @@ import { getPermCode } from '/@/api/sys/user';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
 // import adminroutes from '/@/assets/json/adminroutes.json'
-import {adminRoutes} from '/@/assets/json/routes.js'
+// import {adminRoutes} from '/@/assets/json/routes.js'
+import {studentData as adminRoutes} from '/@/assets/json/routes.js'
+// import {teacherData as adminRoutes} from '/@/assets/json/routes.js'
 import { cloneDeep } from 'lodash-es';
 
 

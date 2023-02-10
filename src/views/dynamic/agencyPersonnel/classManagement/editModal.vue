@@ -51,7 +51,7 @@
         
       });
 
-      const getTitle = computed(() => (!unref(isUpdate) ? '新增菜单' : '编辑菜单'));
+      const getTitle = computed(() => (!unref(isUpdate) ? '新增' : '编辑'));
 
       async function handleSubmit() {
         try {

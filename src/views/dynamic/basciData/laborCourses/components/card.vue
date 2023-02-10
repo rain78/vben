@@ -6,20 +6,25 @@
         <Icon icon="mdi:checkbox-blank-circle-outline" v-else />
       </div>
       <div class="cardImg" @click="goDetail">
-        <Image class="cardImglist" :src="data.url" :preview="false" v-if="data.suffix!='mp4'&&data.suffix!='mov'"/>
-       
-        <video class="cardVideolist"  v-else>
-          <source :src="data.url" type="video/mp4" >
-        </video>
+        <Image class="cardImglist" :src="data.sourceMaterialCoverUrl" :preview="false" />
+      </div>
+      <div class="cardText">
+        <div>{{ index + 1 }}.{{ data.name }}</div>
+        <div>{{ data.grade }}</div>
       </div>
     </div>
+    <template #actions>
+      
+      <slot name="actionsOption1" :data="data"> </slot>
+      <slot name="actionsOption2" :data="data"> </slot>
+    </template>
   </Card>
 </template>
 <script lang="ts">
   import { defineComponent, ref, computed, unref } from 'vue';
   import { Card, Image } from 'ant-design-vue';
-    import { Icon } from '/@/components/Icon';
-
+  import { Icon } from '/@/components/Icon';
+  import { router } from '/@/router';
   import { useMessage } from '/@/hooks/web/useMessage';
   export default defineComponent({
     name: 'laborCoursesCard',
@@ -29,7 +34,8 @@
     setup(props, { emit }) {
       const idSelect=ref(false)
       function goDetail(){
-        alert('goDetail')
+        const {data}=props
+        router.push('/basciData/laborCourses/detail/' + data.id);
       }
 
       function doSelect(){
@@ -61,7 +67,7 @@
         top: 5px;
         left: 5px;
         color:  @primary-color;
-        z-index: 999;
+        z-index: 9;
         cursor: pointer;
 
         // font-size: 30px;
@@ -71,16 +77,12 @@
         justify-content: center;
         align-items: center;
         width: 100%;
-        aspect-ratio: 1/1 !important;
+        aspect-ratio: 1/1;
         cursor: pointer;
 
         .cardImglist {
           max-width: 100%;
           max-height: 100%;
-        }
-        .cardVideolist{
-          max-width: 100% !important;
-          max-height: 100% !important;
         }
       }
 

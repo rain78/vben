@@ -53,6 +53,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       ],
     },
     server: {
+      hmr:true,
       https: false,
       // Listening on all local IPs
       host: true,
