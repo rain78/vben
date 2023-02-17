@@ -1,12 +1,19 @@
 <template>
-<!-- <template v-slot:BreadcrumbRight>
+  <!-- <template v-slot:BreadcrumbRight>
       ccc
     </template> -->
   <div class="p-16px border-box">
-    
     <div>
       <Row :gutter="10">
-        <Col :xs="24" :sm="24" :md="24" :lg="19" :xl="19" :xxl="19" class="mb-10px">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="24"
+          :lg="spanNum"
+          :xl="spanNum"
+          :xxl="spanNum"
+          class="mb-10px border-box"
+        >
           <Card class="boxShadow" :bordered="false">
             <h1 class="font-bold text-30px mb-15px">{{ previewData.name }}</h1>
             <div v-for="(sort, index) in sortDate" class="mt-1" :key="index">
@@ -50,7 +57,15 @@
             </div>
           </Card>
         </Col>
-        <Col :xs="24" :sm="24" :md="24" :lg="5" :xl="5" :xxl="5">
+        <Col
+          :xs="24"
+          :sm="24"
+          :md="24"
+          :lg="24 - spanNum"
+          :xl="24 - spanNum"
+          :xxl="24 - spanNum"
+          class="border-box"
+        >
           <!-- <div class=""></div> -->
           <Card class="boxShadow !mb-10px" :bordered="false" title="课程说明 ">
             <template #cover>
@@ -175,21 +190,49 @@
     CardMeta,
     Divider,
   } from 'ant-design-vue';
-  import { ref, computed, unref } from 'vue';
+  import { ref, computed, unref, watch } from 'vue';
   import { useRoute } from 'vue-router';
   import { laborCourseDetail as getDetail } from '/@/api/dynamic/basciData';
   import { getDictType } from '/@/api/common/index';
   import { MarkdownViewer } from '/@/components/Markdown';
   import { Icon } from '/@/components/Icon';
   import projectSetting from '/@/settings/projectSetting';
-  const route = useRoute();
-  const previewData = ref({});
   import { changeData } from '/@/utils';
 
-  getDetail({ id: route.params.id }).then(({ obj }) => {
-    previewData.value = obj || {};
-    console.log('previewData=>', obj);
+  const route = useRoute();
+  const props = defineProps({
+    laborCourseId: { type: String },
+    spanNum: {
+      type: Number,
+      default: 19,
+    },
   });
+  const ID = computed(() => props.laborCourseId || route.params.id || '');
+  const previewData = ref({});
+
+  watch(
+    () => ID.value,
+    async () => {
+      try {
+        let id = ID.value;
+        if (!id) {
+          previewData.value = {};
+          return false;
+        }
+        const { obj } = getDetail({ id });
+        previewData.value = obj || {};
+      } catch (error) {
+        console.log('error=>', error);
+      }
+
+      // getDetail({ id }).then(({ obj }) => {
+      //   previewData.value = obj || {};
+      // });
+    },
+    {
+      immediate: true,
+    },
+  );
 
   let gradeData = ref([]);
   let activityFormData = ref([]);

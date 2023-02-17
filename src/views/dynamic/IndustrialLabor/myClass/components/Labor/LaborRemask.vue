@@ -5,7 +5,8 @@
         <div
           class="remarkListBox rounded-6px bg-hex-fff w-full border-box mb-10px cursor-pointer"
           :key="item.id"
-          @mouseenter="open = true" @mouseleave="open = false"
+          @mouseenter="open = true"
+          @mouseleave="open = false"
         >
           <div class="p-15px border-box flex justify-between items-center">
             <div class="remark_card_top_left flex items-center">
@@ -70,9 +71,9 @@
                 </div>
                 <div class="p-15px border-box flex justify-between items-center text-hex-00000073">
                   <span>截止日期：{{ item.completionTime }}</span>
-                  <span @click="$emit('maskDetail',item)" style="color: var(--theme)"
-                    >查看</span
-                  >
+                  <slot name="showDetail">
+                    <span @click="$emit('maskDetail', item)" style="color: var(--theme)">查看</span>
+                  </slot>
                 </div>
               </div>
             </template>
@@ -84,18 +85,17 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, defineProps, computed, watch, unref,defineEmits } from 'vue';
+  import { ref, defineProps, computed, watch, unref, defineEmits } from 'vue';
   import projectSetting from '/@/settings/projectSetting';
-  import { Row, Col, Divider,  List, ListItem } from 'ant-design-vue';
+  import { Row, Col, Divider, List, ListItem } from 'ant-design-vue';
   import { Icon } from '/@/components/Icon';
-
 
   const props = defineProps({
     item: { type: Object },
     index: { type: Number },
   });
-  const emit=defineEmits(['maskDetail'])
-  const open=ref(false)
+  const emit = defineEmits(['maskDetail']);
+  const open = ref(false);
 </script>
 
 <style lang="less" scoped>

@@ -37,7 +37,7 @@
                     @click="remove(item.id)"
                     icon="mdi:close-circle-outline"
                     color="red"
-                    class="cursor-pointer"
+                    class="pointer"
                     title="移除"
                   />
                 </span>

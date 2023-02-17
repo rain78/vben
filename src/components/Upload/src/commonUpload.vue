@@ -25,13 +25,10 @@
   import { defineComponent, ref, computed, unref } from 'vue';
   import { BasicModal, useModalInner } from '/@/components/Modal';
 
-  import { InboxOutlined } from '@ant-design/icons-vue';
-  import { message } from 'ant-design-vue';
-  import type { UploadChangeParam } from 'ant-design-vue';
-  import { UploadDragger, Space } from 'ant-design-vue';
+  import { Upload , Space } from 'ant-design-vue';
 
   export default defineComponent({
-    components: { BasicModal, InboxOutlined, UploadDragger, Space },
+    components: { BasicModal, UploadDragger:Upload.Dragger, Space },
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const fileList = ref([]);

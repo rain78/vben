@@ -28,8 +28,9 @@
               {{ item.label }}
             </span>
           </template>
-          <div>
-            <component :is="item.component" :userInfo="userInfo" :clazzmemberData="clazzmemberData"> </component>
+          <div  class="border-box">
+            <component :is="item.component" > </component>
+            <!-- <component :is="item.component" :userInfo="userInfo" :clazzmemberData="clazzmemberData"> </component> -->
           </div>
         </TabPane>
       </Tabs>
@@ -40,7 +41,7 @@
 <script  lang="ts" setup>
   import { formartClazz } from '/@/api/common/index';
 
-  import { ref, unref, reactive,computed } from 'vue';
+  import { ref, unref, reactive,computed ,provide} from 'vue';
   import { Tabs, TabPane } from 'ant-design-vue';
   import { Icon } from '/@/components/Icon';
   import { Button } from '/@/components/Button';
@@ -49,7 +50,7 @@
   import Labor from './components/Labor/index.vue';
   import Notice from './components/Notice/index.vue';
   const clazzmemberData = ref({});
-  const activeKey = ref('Labor');
+  const activeKey = ref('Notice');
   const tabs = reactive([
     {
       label: '劳动作业',
@@ -58,16 +59,18 @@
       component: Labor,
     },
     {
-      label: '素材列表',
+      label: '通知',
       icon: 'mdi:message-processing',
       key: 'Notice',
       component: Notice,
     },
   ]); 
   const userInfo=ref({})
+  provide('userInfo', userInfo)
+  provide('clazzmemberData', clazzmemberData)
   userGetDetail().then(({obj,success})=>{
     userInfo.value=success?obj:{}
-    console.log('userGetDetail=>',obj)
+    // console.log('userGetDetail=>',obj)
 
     getDetail()
   })
@@ -75,7 +78,7 @@
     // console.log('clazzId')
     const {clazzIds}=unref(userInfo)
     const { success, obj } = await classStu({ clazzId: clazzIds[0] });
-    console.log('getDetail=>',obj)
+    // console.log('getDetail=>',obj)
     clazzmemberData.value = obj;
     
   }

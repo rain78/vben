@@ -28,7 +28,7 @@ export const adminRoutes=[
 				"name": "角色管理",
 				"spread": false,
 				"path": "role",
-				"component": "dynamic/jurisdiction/role/index",
+				"component": "dynamic/upms/role/index",
 				"permission": "",
 				"redirect": "",
 				"keepAlive": false,

@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div  class="border-box">
     <Row :gutter="[8, { xs: 8, sm: 8, md: 8, lg: 8 }]">
-      <Col :xs="24" :sm="24" :md="5" :lg="5" :xl="5" class="!pr-0">
+      <Col :xs="24" :sm="24" :md="5" :lg="5" :xl="5" class="!pr-0 border-box">
         <div>
           <div class="flex">
             <div class="flex-1 border-box">
@@ -16,16 +16,16 @@
                       <div
                         :key="item.id"
                         class="w-full flex items-center"
-                        @click="laborCourseId = item.id"
+                        @click="selectLaborCourseId(item)"
                       >
-                        <span class="flex-1 p-2px border-box flex ">
+                        <span class="flex-1 p-2px border-box flex">
                           <span class="laborCourseShadow flex-1 flex border-box items-center">
                             <img
                               style="height: 36px; aspect-ratio: 1/1"
                               :src="item.sourceMaterialCoverUrl"
                               alt=""
                             />
-                            <span class=" ml-10px flex ">{{ index + 1 }}.{{ item.name }}</span>
+                            <span class="ml-10px flex">{{ index + 1 }}.{{ item.name }}</span>
                           </span>
                         </span>
                         <span
@@ -50,15 +50,20 @@
           </div>
         </div>
       </Col>
-      <Col :xs="24" :sm="24" :md="19" :lg="19" :xl="19" class="!pl-0">
-        <div class="flex">
+      <Col :xs="24" :sm="24" :md="19" :lg="19" :xl="19" class="!pl-0 border-box">
+        <div class="flex border-box">
           <div class="h-auto">
             <Divider
               type="vertical"
               class="!h-full w-3px"
               :style="{ 'background-color': projectSetting.themeColor }"
             />
+           
           </div>
+           <div class="flex-1 border-box">
+              <!-- <Course ></Course> -->
+              <Course :laborCourseId="laborCourseId" :key="laborCourseId"></Course>
+            </div>
         </div>
       </Col>
     </Row>
@@ -66,7 +71,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed, watch, unref } from 'vue';
+  import { ref, computed, watch, unref,inject  } from 'vue';
   import { Row, Col, Divider, List, ListItem, Select, SelectOption } from 'ant-design-vue';
   import projectSetting from '/@/settings/projectSetting';
   import { Button } from '/@/components/Button';
@@ -74,15 +79,18 @@
   import { laborCourseClazz, laborCourseGrade } from '/@/api/dynamic/basciData';
   import { laborHomeworkDetail } from '/@/api/dynamic/industriallabor';
   import { useModal } from '/@/components/Modal';
+  import Course from './Course.vue';
   const [registerModal, { openModal }] = useModal();
 
-  const props = defineProps({
-    clazzmemberData: { type: Object },
-    userInfo: { type: Object },
-  });
+  const clazzmemberData= inject('clazzmemberData')
+  const userInfo= inject('userInfo')
+
+  // const props = defineProps({
+  //   clazzmemberData: { type: Object },
+  //   userInfo: { type: Object },
+  // });
   const clazzId = computed(() => {
-    // if (!props.userInfo.clazzIds[0]) return '';
-    return props.userInfo.clazzIds[0] || '';
+    return unref(userInfo)?.clazzIds?.[0];
   });
 
   const laborCourseClazzData = ref([]);
@@ -103,6 +111,12 @@
       immediate: true,
     },
   );
+
+  function selectLaborCourseId(item){
+    laborCourseId.value=item.id
+  }
+  // provide('laborCourseId', laborCourseId)
+
 </script>
 
 <style lang="less" scoped>

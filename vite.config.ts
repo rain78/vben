@@ -59,15 +59,15 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       host: true,
       port: VITE_PORT,
       // Load proxy configuration from .env
-      proxy: createProxy(VITE_PROXY),
+      // proxy: createProxy(VITE_PROXY),
     },
     esbuild: {
       pure: VITE_DROP_CONSOLE ? ['console.log', 'debugger'] : [],
     },
     build: {
-      target: 'es2015',
       cssTarget: 'chrome80',
       outDir: OUTPUT_DIR,
+      target: "esnext",
       // minify: 'terser',
       /**
        * 当 minify=“minify:'terser'” 解开注释
