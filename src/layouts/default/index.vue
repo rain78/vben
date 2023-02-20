@@ -12,11 +12,8 @@
     <Layout :class="[layoutClass]">
       <LayoutSideBar v-if="getShowSidebar || getIsMobile" />
       <Layout :class="`${prefixCls}-main`">
-        <LayoutMultipleHeader>
-          <!-- <template v-slot:BreadcrumbRight>
-            <slot name="BreadcrumbRight"></slot>
-          </template> -->
-        </LayoutMultipleHeader>
+        <!-- <LayoutMultipleHeader>
+        </LayoutMultipleHeader> -->
         <LayoutContent />
         <LayoutFooter />
       </Layout>
@@ -25,7 +22,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, computed, unref,ref } from 'vue';
+  import { defineComponent, computed, unref, ref } from 'vue';
   import { Layout } from 'ant-design-vue';
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
 
@@ -41,7 +38,6 @@
 
   import { useAppInject } from '/@/hooks/web/useAppInject';
   import projectSetting from '/@/settings/projectSetting';
-
 
   export default defineComponent({
     name: 'DefaultLayout',
@@ -79,7 +75,7 @@
         getIsMixSidebar,
         layoutClass,
         lockEvents,
-        projectSetting:ref(projectSetting)
+        projectSetting: ref(projectSetting),
       };
     },
   });

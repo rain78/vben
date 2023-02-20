@@ -11,24 +11,22 @@
 
     <template #overlay>
       <Menu @click="handleMenuClick">
-        <MenuItem
+        <!-- <MenuItem
           key="doc"
           :text="t('layout.header.dropdownItemDoc')"
           icon="ion:document-text-outline"
           v-if="getShowDoc"
         />
-        <MenuDivider v-if="getShowDoc" />
-        <MenuItem
+        <MenuDivider v-if="getShowDoc" /> -->
+        <!-- <MenuItem
           v-if="getUseLockPage"
           key="lock"
           :text="t('layout.header.tooltipLock')"
           icon="ion:lock-closed-outline"
-        />
-        <MenuItem
-          key="logout"
-          :text="t('layout.header.dropdownItemLoginOut')"
-          icon="ion:power-outline"
-        />
+        /> -->
+        <MenuItem key="userInfo" >个人信息</MenuItem>
+        <MenuItem key="theme" >设置主题</MenuItem>
+        <MenuItem key="logout" >{{t('layout.header.dropdownItemLoginOut')}}</MenuItem>
       </Menu>
     </template>
   </Dropdown>
@@ -170,7 +168,7 @@
 
     &-dropdown-overlay {
       .ant-dropdown-menu-item {
-        min-width: 160px;
+        min-width: 100px;
       }
     }
   }

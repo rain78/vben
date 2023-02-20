@@ -6,6 +6,7 @@ enum Api {
   roleMenu = '/role/menu',
 
   menuTree = '/menu/tree',
+  menuEdit = '/menu',
   
 
 }
@@ -20,6 +21,10 @@ export const roleEdit = (params, type = 'post') => {
 }
 export const roleMenu = (params) => apiHttp.put({ url: Api.roleMenu, params })
 
-
 export const menuTree = (params) => apiHttp.get({ url: Api.menuTree + (params.id ? `/${params.id}` : '') });
-
+export const menuList = (params) => apiHttp.get({ url: Api.menuTree, params });
+export const menuDelete = (params = '') => apiHttp.delete({ url: Api.menuEdit + (params ? `/${params.ids}` : '') })
+export const menuEdit = (params, type = 'post') => {
+  if (type === 'post') return apiHttp.post({ url: Api.menuEdit, params })
+  else return apiHttp.put({ url: Api.menuEdit, params })
+}

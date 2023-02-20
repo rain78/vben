@@ -1,29 +1,32 @@
 <template>
-  <RouterView>
-    <template #default="{ Component, route }">
-      <transition
-        :name="
-          getTransitionName({
-            route,
-            openCache,
-            enableTransition: getEnableTransition,
-            cacheTabs: getCaches,
-            def: getBasicTransition,
-          })
-        "
-        mode="out-in"
-        appear
-      >
-        <keep-alive v-if="openCache" :include="getCaches">
-          <component :is="Component" :key="route.fullPath" />
-        </keep-alive>
-        <div v-else :key="route.name">
-          <component :is="Component" :key="route.fullPath" />
-        </div>
-      </transition>
-    </template>
-  </RouterView>
-  <FrameLayout v-if="getCanEmbedIFramePage" />
+  <div class="pt-64px border-box">
+    <LayoutMultipleHeader> </LayoutMultipleHeader>
+    <RouterView>
+      <template #default="{ Component, route }">
+        <transition
+          :name="
+            getTransitionName({
+              route,
+              openCache,
+              enableTransition: getEnableTransition,
+              cacheTabs: getCaches,
+              def: getBasicTransition,
+            })
+          "
+          mode="out-in"
+          appear
+        >
+          <keep-alive v-if="openCache" :include="getCaches">
+            <component :is="Component" :key="route.fullPath" />
+          </keep-alive>
+          <div v-else :key="route.name">
+            <component :is="Component" :key="route.fullPath" />
+          </div>
+        </transition>
+      </template>
+    </RouterView>
+    <FrameLayout v-if="getCanEmbedIFramePage" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -38,10 +41,11 @@
   import { getTransitionName } from './transition';
 
   import { useMultipleTabStore } from '/@/store/modules/multipleTab';
+  import LayoutMultipleHeader from '/@/layouts/default/header/MultipleHeader.vue';
 
   export default defineComponent({
     name: 'PageLayout',
-    components: { FrameLayout },
+    components: { FrameLayout, LayoutMultipleHeader },
     setup() {
       const { getShowMultipleTab } = useMultipleTabSetting();
       const tabStore = useMultipleTabStore();

@@ -11,7 +11,7 @@ export const adminRoutes=[
 				"name": "菜单管理",
 				"spread": false,
 				"path": "menu",
-				"component": "dynamic/jurisdiction/menu/index",
+				"component": "dynamic/upms/menu/index",
 				"permission": "",
 				"redirect": "",
 				"keepAlive": false,

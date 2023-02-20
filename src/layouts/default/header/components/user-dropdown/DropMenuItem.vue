@@ -1,8 +1,9 @@
 <template>
   <MenuItem :key="itemKey">
-    <span class="flex items-center">
-      <Icon :icon="icon" class="mr-1" />
-      <span>{{ text }}</span>
+    <span class="flex items-center justify-center">
+      <!-- <Icon :icon="icon" class="mr-1" /> -->
+      <!-- <span>{{ text }}</span> -->
+      <span v-if="$slots.default"><slot></slot></span> 
     </span>
   </MenuItem>
 </template>
@@ -23,7 +24,8 @@
       text: propTypes.string,
       icon: propTypes.string,
     },
-    setup(props) {
+    setup(props,{slots}) {
+      console.log('slots=>',slots)
       const instance = getCurrentInstance();
       const itemKey = computed(() => props.key || instance?.vnode?.props?.key);
       return { itemKey };
