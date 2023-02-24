@@ -1,6 +1,6 @@
 <template>
   <div :class="prefixCls">
-    <CollapseHeader v-bind="props" :prefixCls="prefixCls" :show="show" @expand="handleExpand">
+    <CollapseHeader v-bind="props" v-if="isShow" :prefixCls="prefixCls" :show="show" @expand="handleExpand">
       <template #title>
         <slot name="title"></slot>
       </template>
@@ -58,6 +58,7 @@
      * Delayed loading time
      */
     lazyTime: { type: Number, default: 0 },
+    isShow:{ type: Boolean, default: true }
   });
 
   const show = ref(true);

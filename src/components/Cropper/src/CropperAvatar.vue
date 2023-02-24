@@ -1,15 +1,15 @@
 <template>
   <div :class="getClass" :style="getStyle">
-    <div :class="`${prefixCls}-image-wrapper`" :style="getImageWrapperStyle" @click="openModal">
-      <div :class="`${prefixCls}-image-mask`" :style="getImageWrapperStyle">
+    <div :class="`${prefixCls}-image-wrapper`" :style="getImageWrapperStyle" >
+      <!-- <div :class="`${prefixCls}-image-mask`" :style="getImageWrapperStyle">
         <Icon
           icon="ant-design:cloud-upload-outlined"
           :size="getIconWidth"
           :style="getImageWrapperStyle"
           color="#d6d6d6"
         />
-      </div>
-      <img :src="sourceValue" v-if="sourceValue" alt="avatar" />
+      </div> -->
+      <Image :src="sourceValue" v-if="sourceValue"  />
     </div>
     <a-button
       :class="`${prefixCls}-upload-btn`"
@@ -46,6 +46,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import type { ButtonProps } from '/@/components/Button';
   import Icon from '/@/components/Icon';
+  import { Image} from 'ant-design-vue';
 
   const props = {
     width: { type: [String, Number], default: '200px' },
@@ -58,7 +59,7 @@
 
   export default defineComponent({
     name: 'CropperAvatar',
-    components: { CopperModal, Icon },
+    components: { CopperModal, Icon,Image },
     props,
     emits: ['update:value', 'change'],
     setup(props, { emit, expose }) {

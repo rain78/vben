@@ -121,6 +121,7 @@
   import { dataURLtoBlob } from '/@/utils/file/base64Conver';
   import { isFunction } from '/@/utils/is';
   import { useI18n } from '/@/hooks/web/useI18n';
+  import { cloneDeep } from 'lodash-es';
 
   type apiFunParams = { file: Blob; name: string; filename: string };
 
@@ -140,6 +141,7 @@
       let filename = '';
       const src = ref('');
       const previewSource = ref('');
+      // const fileList = ref([]);
       const cropper = ref<Cropper>();
       let scaleX = 1;
       let scaleY = 1;
@@ -150,6 +152,8 @@
 
       // Block upload
       function handleBeforeUpload(file: File) {
+        // console.log('file=>',file)
+        // fileList.value=cloneDeep(file)
         const reader = new FileReader();
         reader.readAsDataURL(file);
         src.value = '';
@@ -179,15 +183,37 @@
         cropper?.value?.[event]?.(arg);
       }
 
+      //  base64 => file
+      function dataURLtoFile(dataurl, filename) {
+        var arr = dataurl.split(',');
+        var mime = arr[0].match(/:(.*?);/)[1];
+        var bstr = atob(arr[1]);
+        var n = bstr.length;
+        var u8arr = new Uint8Array(n);
+        while (n--) {
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        let file = new File([u8arr], filename, { type: mime });
+        return file;
+      }
+
       async function handleOk() {
         const uploadApi = props.uploadApi;
         if (uploadApi && isFunction(uploadApi)) {
-          const blob = dataURLtoBlob(previewSource.value);
+          // const blob = dataURLtoBlob(previewSource.value);
+          console.log('previewSource=>', dataURLtoFile(previewSource.value, filename));
+          const formdata = new FormData();
+          formdata.append('files', dataURLtoFile(previewSource.value, filename));
           try {
             ({ confirmLoading: true });
-            const result = await uploadApi({ name: 'file', file: blob, filename });
-            emit('uploadSuccess', { source: previewSource.value, data: result.data });
-            closeModal();
+            const {
+              data: { success, obj },
+            } = await uploadApi(formdata);
+            if (success) {
+              emit('uploadSuccess', { source: previewSource.value, data: obj[0] || {} });
+              closeModal();
+            }
+            // const result = await uploadApi(formdata);
           } finally {
             setModalProps({ confirmLoading: false });
           }
@@ -205,6 +231,7 @@
         handleReady,
         handlerToolbar,
         handleOk,
+        // fileList,
       };
     },
   });

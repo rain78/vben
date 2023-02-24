@@ -233,10 +233,11 @@ export const usePermissionStore = defineStore({
           try {
             await this.changePermissionCode();
             // routeList = (await getMenuList()) as AppRouteRecordRaw[];
-            // const {obj}=await getMenuList2()
-            // console.log('routeList2=>',routeList2.obj)
+            const {obj}=await getMenuList2()
+            // console.log('routeList2=>',obj)
 
-            routeList2=cloneDeep(adminRoutes)
+            routeList2=cloneDeep(obj)
+            // routeList2=cloneDeep(adminRoutes)
             // routeList2=routeList2 as AppRouteRecordRaw[]
             // console.log('adminRoutes=>',adminRoutes)
 

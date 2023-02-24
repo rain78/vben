@@ -1,6 +1,6 @@
 <template>
   <div>
-    <BasicTable @register="registerTable">
+    <BasicTable @register="registerTable" >
       <template #form-formBtn>
         <a-button color="success" @click="handleCreate" class="mr-2">新增</a-button>
         <!-- <a-button type="primary" @click="getSelectRowList" class="mr-2">获取选中行</a-button> -->
@@ -70,7 +70,8 @@
         bordered: false,
         // bordered: true,
         showIndexColumn: false,
-         isTreeTable: true,
+        defaultExpandAllRows:true,
+        isTreeTable: true,
         // rowKey: 'id',
         // rowSelection: {
         //   type: 'checkbox',

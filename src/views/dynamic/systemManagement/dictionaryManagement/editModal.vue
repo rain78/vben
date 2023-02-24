@@ -8,8 +8,10 @@
   import { BasicModal, useModalInner } from '/@/components/Modal';
   import { BasicForm, useForm } from '/@/components/Form/index';
   import { formSchema } from './data';
-  import { menuEdit as update ,menuDetail as getDetail} from '/@/api/dynamic/upms';
+  import {dictEdit as update,dictGetDetail as getDetail } from '/@/api/dynamic/systemManagement';
 
+
+  
   import { useMessage } from '/@/hooks/web/useMessage';
   export default defineComponent({
     name: 'MenuModal',
@@ -19,8 +21,10 @@
       const isUpdate = ref(true);
       const rowId = ref('');
 
-      const { createMessage } = useMessage();
-      const { success, error } = createMessage;
+       const {
+        createMessage,
+      } = useMessage();
+      const { success,error } = createMessage;
 
       const [registerForm, { setFieldsValue, updateSchema, resetFields, validate }] = useForm({
         labelWidth: 100,
@@ -36,21 +40,21 @@
         resetFields();
         setModalProps({ confirmLoading: false });
         isUpdate.value = !!data?.isUpdate;
-        const { obj: detailData } = await getDetail({ id: data.record.id });
+        // const { obj: detailData } = await getDetail({ ids: data.record.id });
         // console.log('detailData=>',detailData)
         if (unref(isUpdate)) {
           rowId.value = data.record.id;
-          const meta=detailData.meta?JSON.parse(detailData.meta):{}
           setFieldsValue({
-            // ...data.record,
-            ...detailData,
-            // name:data.record.label,
-            type:data.record.type*1,
-            hideMenu:meta?.hideMenu||false,
-            hideChildrenInMenu:meta?.hideChildrenInMenu||false,
-            dynamicLevel:meta?.dynamicLevel||0,
+            ...data.record,
+            // ...detailData,
+            lockFlag:!data.record.lockFlag
+            // roleIds:values.roleIds.join(',')
           });
+          
+          
         }
+
+        
       });
 
       const getTitle = computed(() => (!unref(isUpdate) ? '新增' : '编辑'));
@@ -60,36 +64,13 @@
           const values = await validate();
           // console.log('values=>',values)
           setModalProps({ confirmLoading: true });
-          let editData = {};
-          if (unref(isUpdate)) {
-            editData = {
-              id: rowId.value,
-              // meta: JSON.stringify({
-              //   name: values.name,
-              // }),
-            };
+          let editData={}
+          if(unref(isUpdate)){
+            editData={
+              id:rowId.value
+            }
           }
-          let subData = {
-            name: values.name,
-            permission: values.permission||'',
-            path:  values.path||'',
-            parentId: values.parentId||'-1',
-            icon: values.icon||'',
-            component: values.component||'',
-            sort: values.sort||0,
-            keepAlive: values.keepAlive||'',
-            type: values.type,
-            redirect:values.redirect||'',
-            meta: JSON.stringify({
-                name: values.name,
-                hideMenu:values.hideMenu||false,
-                hideChildrenInMenu:values.hideChildrenInMenu||false,
-                dynamicLevel:values.dynamicLevel||0
-            }),
-          };
-          
-          // console.log('subData=>',subData);
-          const {obj,success:resFlag}=await update({...subData,...editData},unref(isUpdate)?'put':'post')
+          const {obj,success:resFlag}=await update({...values,...editData,},unref(isUpdate)?'put':'post')
 
           if(resFlag){
             emit('success');

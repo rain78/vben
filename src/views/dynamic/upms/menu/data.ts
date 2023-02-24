@@ -42,11 +42,34 @@ export const formSchema: FormSchema[] = [
     colProps: { lg: 24, md: 24 },
     // required: true
   },
+  //hideChildrenInMenu
+  {
+    field: 'hideChildrenInMenu',
+    label: '隐藏子菜单',
+    component: 'Switch',
+    defaultValue: false,
+    colProps: { lg: 24, md: 24 },
+    // required: true
+  },
+  {
+    field: 'hideMenu',
+    label: '隐藏',
+    component: 'Switch',
+    defaultValue: false,
+    colProps: { lg: 24, md: 24 },
+    // required: true
+  },
   {
     field: 'redirect',
     label: '重定向',
     component: 'Input',
     // required: true,
+  },
+  //dynamicLevel
+  {
+    field: 'dynamicLevel',
+    label: '动态路由打开数',
+    component: 'InputNumber',
   },
   {
     field: 'sort',
@@ -56,9 +79,7 @@ export const formSchema: FormSchema[] = [
   {
     field: 'parentId',
     label: '父级',
-    // component: 'TreeSelect',
     component: 'ApiTreeSelect',
-    defaultValue:'-1',
     componentProps: {
       api: menuList,
       resultField: 'obj',

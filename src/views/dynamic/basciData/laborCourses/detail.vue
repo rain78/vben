@@ -219,7 +219,7 @@
           previewData.value = {};
           return false;
         }
-        const { obj } = getDetail({ id });
+        const { obj } =await getDetail({ id })
         previewData.value = obj || {};
       } catch (error) {
         console.log('error=>', error);

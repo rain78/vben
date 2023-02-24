@@ -25,7 +25,6 @@
       icon: propTypes.string,
     },
     setup(props,{slots}) {
-      console.log('slots=>',slots)
       const instance = getCurrentInstance();
       const itemKey = computed(() => props.key || instance?.vnode?.props?.key);
       return { itemKey };

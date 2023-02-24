@@ -46,7 +46,8 @@
           rowId.value = data.record.id;
           setFieldsValue({
             ...data.record,
-            ...detailData
+            ...detailData,
+            lockFlag:!data.record.lockFlag
             // roleIds:values.roleIds.join(',')
           });
           
@@ -69,7 +70,7 @@
               id:rowId.value
             }
           }
-          const {obj,success:resFlag}=await update({...values,roleIds:values.roleIds.join(','),...editData},unref(isUpdate)?'put':'post')
+          const {obj,success:resFlag}=await update({...values,roleIds:values.roleIds.join(','),...editData,lockFlag:!values.lockFlag},unref(isUpdate)?'put':'post')
 
           if(resFlag){
             emit('success');

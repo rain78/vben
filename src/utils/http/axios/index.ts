@@ -33,6 +33,7 @@ const transform: AxiosTransform = {
   transformResponseHook: (res: AxiosResponse<Result>, options: RequestOptions) => {
     // debugger
     // console.log('options=>',options)
+    // console.log('res=>',res)
     const { t } = useI18n();
     const { isTransformResponse, isReturnNativeResponse,apiUrl } = options;
     // 是否返回原生响应头 比如：需要获取响应头时使用该属性
@@ -50,6 +51,10 @@ const transform: AxiosTransform = {
     if (!data) {
       // return '[HTTP] Request has no return value';
       throw new Error(t('sys.api.apiRequestFailed'));
+    }
+    // console.log('data.success=>',data.success)
+    if(!data.success&&apiUrl==='http://ioteduendpoint.stepiot.com'){
+      throw new Error(data?.msg||t('sys.api.apiRequestFailed'));
     }
     //  这里 code，result，message为 后台统一的字段，需要在 types.ts内修改为项目自己的接口返回格式
     const { code, result, message } = data;
@@ -182,6 +187,7 @@ const transform: AxiosTransform = {
    * @description: 响应错误处理
    */
   responseInterceptorsCatch: (axiosInstance: AxiosResponse, error: any) => {
+    // console.log('error=>',error)
     const { t } = useI18n();
     const errorLogStore = useErrorLogStoreWithOut();
     errorLogStore.addAjaxErrorInfo(error);

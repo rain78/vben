@@ -95,6 +95,7 @@ export function findPath<T = any>(
       node[children!] && list.unshift(...node[children!]);
       path.push(node);
       if (func(node)) {
+        // console.log('path=>',path)
         return path;
       }
     }

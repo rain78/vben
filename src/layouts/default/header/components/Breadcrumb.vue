@@ -1,5 +1,5 @@
 <template>
-  <div :class="[prefixCls, `${prefixCls}--${theme}`]">
+  <div :class="[prefixCls, `${prefixCls}--${theme}`]" v-if="routes.length">
     <a-breadcrumb :routes="routes" separator=">">
       <template #itemRender="{ route, routes: routesMatched, paths }">
         <Icon
@@ -22,7 +22,7 @@
   import { useRouter } from 'vue-router';
   import type { Menu } from '/@/router/types';
 
-  import { defineComponent, ref, watchEffect } from 'vue';
+  import { defineComponent, ref, watchEffect, watch } from 'vue';
 
   import { Breadcrumb, Card } from 'ant-design-vue';
   import Icon from '/@/components/Icon';
@@ -52,43 +52,91 @@
       const { prefixCls } = useDesign('layout-breadcrumb');
       const { getShowBreadCrumbIcon } = useRootSetting();
       const go = useGo();
+      // console.log('currentRoute=>',currentRoute)
+      watch(
+        currentRoute,
+       async (newValue, oldValue) => {
+          if (currentRoute.value.name === REDIRECT_NAME) return;
+          const menus = await getMenus();
+
+          const routeMatched = currentRoute.value.matched;
+          const cur = routeMatched?.[routeMatched.length - 1];
+          let path = currentRoute.value.path;
+          let dynamicLevel=currentRoute.value.meta.dynamicLevel||0
+          if(dynamicLevel){
+            const index=path.lastIndexOf('/')
+            path=path.slice(0,index)+'/:id?'
+          }
+
+          if (cur && cur?.meta?.currentActiveMenu) {
+            path = cur.meta.currentActiveMenu as string;
+          }
+          // console.log(currentRoute.value)
+
+          const parent = getAllParentPath(menus, path);
+          // console.log('parent=>',parent)
+          // console.log('menus=>',menus)
+          const filterMenus = menus.filter((item) => item.path === parent[0]);
+
+          const matched = getMatched(filterMenus, parent) as any;
+          // console.log('matched=>',matched)
+
+          if (!matched || matched.length === 0) return;
+
+          const breadcrumbList = filterItem(matched);
+
+          if (currentRoute.value.meta?.currentActiveMenu) {
+            breadcrumbList.push({
+              ...currentRoute.value,
+              name: currentRoute.value.meta?.name || '',
+            } as unknown as RouteLocationMatched);
+          }
+          breadcrumbList.forEach((val, index) => {
+            val.index = index;
+          });
+          routes.value = breadcrumbList;
+        },
+        { immediate: true },
+      );
 
       const { t } = useI18n();
       watchEffect(async () => {
         //  console.log(currentRoute.value,REDIRECT_NAME)
-        if (currentRoute.value.name === REDIRECT_NAME) return;
-        const menus = await getMenus();
+        // if (currentRoute.value.name === REDIRECT_NAME) return;
+        // const menus = await getMenus();
 
-        const routeMatched = currentRoute.value.matched;
-        const cur = routeMatched?.[routeMatched.length - 1];
-        let path = currentRoute.value.path;
+        // const routeMatched = currentRoute.value.matched;
+        // const cur = routeMatched?.[routeMatched.length - 1];
+        // let path = currentRoute.value.path;
 
-        if (cur && cur?.meta?.currentActiveMenu) {
-          path = cur.meta.currentActiveMenu as string;
-        }
-        const parent = getAllParentPath(menus, path);
+        // if (cur && cur?.meta?.currentActiveMenu) {
+        //   path = cur.meta.currentActiveMenu as string;
+        // }
+        // const parent = getAllParentPath(menus, path);
 
-        const filterMenus = menus.filter((item) => item.path === parent[0]);
+        // const filterMenus = menus.filter((item) => item.path === parent[0]);
 
-        const matched = getMatched(filterMenus, parent) as any;
-        if (!matched || matched.length === 0) return;
+        // const matched = getMatched(filterMenus, parent) as any;
+        // // console.log('matched=>',matched)
 
-        const breadcrumbList = filterItem(matched);
-        // console.log('breadcrumbList=>',breadcrumbList)
+        // if (!matched || matched.length === 0) return;
 
-        if (currentRoute.value.meta?.currentActiveMenu) {
-          breadcrumbList.push({
-            ...currentRoute.value,
-            name: currentRoute.value.meta?.name || '',
-          } as unknown as RouteLocationMatched);
-        }
-        // console.log('breadcrumbList=>',breadcrumbList)
-        breadcrumbList.forEach((val, index) => {
-          // val.children=[]
-          val.index = index;
-        });
-        // console.log('breadcrumbList=>',breadcrumbList)
-        routes.value = breadcrumbList;
+        // const breadcrumbList = filterItem(matched);
+        // console.log('breadcrumbList=>', breadcrumbList);
+
+        // if (currentRoute.value.meta?.currentActiveMenu) {
+        //   breadcrumbList.push({
+        //     ...currentRoute.value,
+        //     name: currentRoute.value.meta?.name || '',
+        //   } as unknown as RouteLocationMatched);
+        // }
+        // // console.log('breadcrumbList=>',breadcrumbList)
+        // breadcrumbList.forEach((val, index) => {
+        //   // val.children=[]
+        //   val.index = index;
+        // });
+        // // console.log('breadcrumbList=>',breadcrumbList)
+        // routes.value = breadcrumbList;
       });
 
       function getMatched(menus: Menu[], parent: string[]) {
@@ -104,6 +152,8 @@
             metched.push(...getMatched(item.children, parent));
           }
         });
+        // console.log('getMatched=>',matched)
+
         return metched;
       }
 

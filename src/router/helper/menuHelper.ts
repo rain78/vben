@@ -7,6 +7,8 @@ import { RouteParams } from 'vue-router';
 import { toRaw } from 'vue';
 
 export function getAllParentPath<T = Recordable>(treeData: T[], path: string) {
+  // console.log(treeData,path)
+  
   const menuList = findPath(treeData, (n) => n.path === path) as Menu[];
   return (menuList || []).map((item) => item.path);
 }
@@ -71,6 +73,7 @@ export function transformRouteToMenu(routeModList: AppRouteModule[], routerMappi
         name: title,
         hideMenu,
         path: node.path,
+        icon: node.icon,
         ...(node.redirect ? { redirect: node.redirect } : {}),
       };
     },

@@ -23,7 +23,7 @@
     :collapsedShowTitle="collapsedShowTitle"
   >
     <template #title>
-      <Icon v-if="getIcon" :icon="getIcon" :size="16" />
+      <Icon v-if="getIcon" :icon="getIcon" :size="18" />
 
       <div v-if="collapsedShowTitle && getIsCollapseParent" class="mt-2 collapse-title">
         {{ getI18nName }}
@@ -79,7 +79,6 @@
     setup(props) {
       const { t } = useI18n();
       const { prefixCls } = useDesign('simple-menu');
-      // console.log('props=>',props)
       const getShowMenu = computed(() => !props.item?.meta?.hideMenu);
       const getIcon = computed(() => props.item?.icon);
       const getI18nName = computed(() => props.item?.meta?.name);

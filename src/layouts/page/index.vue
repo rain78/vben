@@ -1,6 +1,7 @@
 <template>
-  <div class="pt-64px border-box">
-    <LayoutMultipleHeader> </LayoutMultipleHeader>
+  <div class="border-box @lg:(pt-64px) @xl:(pt-64px) @2xl:(pt-64px) @md:(pt-0px) @sm:(pt-0px)">
+    <!-- <LayoutMultipleHeader > </LayoutMultipleHeader> -->
+    <LayoutMultipleHeader :key="keyHeader"> </LayoutMultipleHeader>
     <RouterView>
       <template #default="{ Component, route }">
         <transition
@@ -30,7 +31,7 @@
 </template>
 
 <script lang="ts">
-  import { computed, defineComponent, unref } from 'vue';
+  import { computed, defineComponent, unref,ref, watchEffect, watch } from 'vue';
 
   import FrameLayout from '/@/layouts/iframe/index.vue';
 
@@ -42,6 +43,7 @@
 
   import { useMultipleTabStore } from '/@/store/modules/multipleTab';
   import LayoutMultipleHeader from '/@/layouts/default/header/MultipleHeader.vue';
+  import { useRoute } from 'vue-router';
 
   export default defineComponent({
     name: 'PageLayout',
@@ -62,6 +64,19 @@
         }
         return tabStore.getCachedTabList;
       });
+      const route = useRoute();
+      // watchEffect(async () => {
+      //   console.log('route=>',route)
+      // })
+      const keyHeader=ref('')
+      watch(
+        route,
+        (newValue, oldValue) => {
+          keyHeader.value=newValue.fullPath
+          // console.log('keyHeader=>',keyHeader.value)
+        },
+        { immediate: true },
+      );
 
       return {
         getTransitionName,
@@ -70,7 +85,11 @@
         getBasicTransition,
         getCaches,
         getCanEmbedIFramePage,
+        keyHeader,
       };
     },
   });
 </script>
+
+<style lang="less" scoped>
+</style>

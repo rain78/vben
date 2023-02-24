@@ -246,7 +246,7 @@
       // console.log('getFormProps=>',getFormProps)
       const getBindValues = computed(() => {
         const dataSource = unref(getDataSourceRef);
-        // console.log('columns=>',toRaw(unref(getViewColumns)))
+        // console.log('getProps=>',getProps.value.defaultExpandAllRows)
         let propsData: Recordable = {
           ...attrs,
           customRow,
@@ -262,14 +262,12 @@
           dataSource,
           footer: unref(getFooterProps),
           ...unref(getExpandOption),
+          // key:getProps.value.defaultExpandAllRows&&(new Date().valueOf()),
           // scroll:{x: true}
         };
-        // if (slots.expandedRowRender) {
-        //   propsData = omit(propsData, 'scroll');
-        // }
-
-        propsData = omit(propsData, ['class', 'onChange']);
         // console.log('propsData=>',propsData)
+        propsData = omit(propsData, ['class', 'onChange'])
+
         return propsData;
       });
 

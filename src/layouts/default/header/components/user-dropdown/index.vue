@@ -50,6 +50,9 @@
   import headerImg from '/@/assets/images/header.jpg';
   import { propTypes } from '/@/utils/propTypes';
   import { openWindow } from '/@/utils';
+  // import { useRouter } from 'vue-router';
+  import { router } from '/@/router';
+
 
   import { createAsyncComponent } from '/@/utils/factory/createAsyncComponent';
 
@@ -72,10 +75,11 @@
       const { t } = useI18n();
       const { getShowDoc, getUseLockPage } = useHeaderSetting();
       const userStore = useUserStore();
+      // const router = useRouter();
 
       const getUserInfo = computed(() => {
-        const { realName = '', avatar, desc } = userStore.getUserInfo || {};
-        return { realName, avatar: avatar || headerImg, desc };
+        const { realName = '', avatar, desc,id } = userStore.getUserInfo || {};
+        return { realName, avatar: avatar || headerImg, desc,id };
       });
 
       const [register, { openModal }] = useModal();
@@ -90,8 +94,11 @@
       }
 
       // open doc
-      function openDoc() {
-        openWindow(DOC_URL);
+      function goUserInfo() {
+        // alert('lll')
+        // openWindow(DOC_URL);
+        // router.push('/userInfo')
+        router.push('/userInfo/user/'+getUserInfo.value.id)
       }
 
       function handleMenuClick(e: MenuInfo) {
@@ -99,8 +106,8 @@
           case 'logout':
             handleLoginOut();
             break;
-          case 'doc':
-            openDoc();
+          case 'userInfo':
+            goUserInfo();
             break;
           case 'lock':
             handleLock();
