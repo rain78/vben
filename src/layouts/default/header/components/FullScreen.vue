@@ -3,8 +3,8 @@
     <span @click="toggle">
       <!-- <FullscreenOutlined v-if="!isFullscreen" />
       <FullscreenExitOutlined v-else /> -->
-        <Icon icon="mdi:fullscreen-exit"  v-if="isFullscreen"  />
-        <Icon icon="mdi:fullscreen"  v-else />
+        <Icon icon="mdi:fullscreen-exit"   v-if="isFullscreen"  />
+        <Icon icon="mdi:fullscreen"    v-else />
 
     </span>
   </Tooltip>

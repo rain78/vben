@@ -47,10 +47,13 @@
   import { Button } from '/@/components/Button';
   import { classStu } from '/@/api/dynamic/agencyPersonnel';
   import { userGetDetail} from '/@/api/dynamic/userRights';
+  import { useRoute } from 'vue-router';
+  const route=useRoute()
+
   import Labor from './components/Labor/index.vue';
   import Notice from './components/Notice/index.vue';
   const clazzmemberData = ref({});
-  const activeKey = ref('Notice');
+  const activeKey = ref(route.query.activeKey||'Labor');
   const tabs = reactive([
     {
       label: '劳动作业',

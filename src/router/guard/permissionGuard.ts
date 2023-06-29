@@ -8,6 +8,8 @@ import { useUserStoreWithOut } from '/@/store/modules/user';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { RootRoute } from '/@/router/routes';
+import { wxLogin } from '/@/api/common/index';
+import { usePermissionStore } from '/@/store/modules/permission';
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
 
@@ -41,7 +43,7 @@ export function createPermissionGuard(router: Router) {
             next((to.query?.redirect as string) || '/');
             return;
           }
-        } catch {}
+        } catch { }
       }
       next();
       return;
@@ -49,11 +51,69 @@ export function createPermissionGuard(router: Router) {
 
     // token does not exist
     if (!token) {
+      console.log('to=>', to)
+
       // You can access without permission. You need to set the routing meta.ignoreAuth to true
       if (to.meta.ignoreAuth) {
         next();
         return;
       }
+      const urlData = to.query
+      // console.log('urlData=>', urlData)
+      if (('code' in urlData) && ('state' in urlData)) {
+        const { success, obj, status } = await wxLogin({
+          code: urlData.code,
+          state: urlData.state
+        });
+        if (status != '99' && success) {
+          const permissionStore = usePermissionStore();
+          // debugger
+          if (!permissionStore.isDynamicAddedRoute) {
+            const routes = await permissionStore.buildRoutesAction();
+            routes.forEach((route) => {
+              // console.log('route=>',route)
+              router.addRoute(route as unknown as RouteRecordRaw);
+            });
+            router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
+            permissionStore.setDynamicAddedRoute(true);
+          }
+          // goHome && (await router.replace(PageEnum.BASE_HOME));
+
+          if (to.name === PAGE_NOT_FOUND_ROUTE.name) {
+            // 动态添加路由后，此处应当重定向到fullPath，否则会加载404页面内容
+            next({ path: to.fullPath, replace: true, query: to.query });
+          } else {
+            const redirectPath = (from.query.redirect || to.path) as string;
+            const redirect = decodeURIComponent(redirectPath);
+            const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect };
+            next(nextData);
+          }
+
+
+          // const routes = await permissionStore.buildRoutesAction();
+
+          // routes.forEach((route) => {
+          //   router.addRoute(route as unknown as RouteRecordRaw);
+          // });
+
+          // router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw);
+
+          // permissionStore.setDynamicAddedRoute(true);
+
+          // if (to.name === PAGE_NOT_FOUND_ROUTE.name) {
+          //   // 动态添加路由后，此处应当重定向到fullPath，否则会加载404页面内容
+          //   next({ path: to.fullPath, replace: true, query: to.query });
+          // } else {
+          //   const redirectPath = (from.query.redirect || to.path) as string;
+          //   const redirect = decodeURIComponent(redirectPath);
+          //   const nextData = to.path === redirect ? { ...to, replace: true } : { path: redirect };
+          //   next(nextData);
+          // }
+        }
+
+
+      }
+
 
       // redirect login page
       const redirectData: { path: string; replace: boolean; query?: Recordable<string> } = {
@@ -116,3 +176,4 @@ export function createPermissionGuard(router: Router) {
     }
   });
 }
+function AddDynamicRoute() { }

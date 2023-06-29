@@ -36,7 +36,7 @@ export function setObjToUrlParams(baseUrl: string, obj: any): string {
 // 深度合并
 export function deepMerge<T = any>(src: any = {}, target: any = {}): T {
   let key: string;
-  const res: any = cloneDeep(src)
+  const res: any = cloneDeep(src);
   for (key in target) {
     res[key] = isObject(res[key]) ? deepMerge(res[key], target[key]) : (res[key] = target[key]);
   }
@@ -93,13 +93,11 @@ export const withInstall = <T>(component: T, alias?: string) => {
   return component as T & Plugin;
 };
 
-
-export function changeData(value,allData){
-	let selectData=allData.find(o=>o.value==value)
-	if(selectData){
-		return selectData.label
-	}else{
-		return ''
-
-	}
+export function changeData<T>(value: any, allData: any) {
+  const selectData = allData.find((o) => o.value == value);
+  if (selectData) {
+    return selectData.label;
+  } else {
+    return '';
+  }
 }

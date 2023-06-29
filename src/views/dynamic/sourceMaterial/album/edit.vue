@@ -62,8 +62,8 @@
 
         <Popover title="" trigger="click" v-model:visible="visible" v-if="id">
           <template #content>
-            <p @click="deleteAlbum">删除专辑</p>
-            <p @click="doShare">分享专辑</p>
+            <p @click="deleteAlbum" class="cursor-pointer">删除专辑</p>
+            <p @click="doShare" class="cursor-pointer">分享专辑</p>
           </template>
           <Icon icon="mdi:dots-vertical" class="font-bold text-4xl" />
         </Popover>
@@ -85,6 +85,7 @@
         }"
         :data-source="sourceData"
         :pagination="false"
+        class="!pt-15px"
       >
         <template #renderItem="{ item, index }">
           <ListItem>
@@ -311,6 +312,6 @@
 </script>
 <style lang="less" scoped>
   // .p-5{
-  //   box-sizing: border-box;
+  //   cursor: pointer;
   // }
 </style>

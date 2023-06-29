@@ -123,7 +123,6 @@ export const usePermissionStore = defineStore({
       let routes: AppRouteRecordRaw[] = [];
       const roleList = toRaw(userStore.getRoleList) || [];
       const { permissionMode = projectSetting.permissionMode } = appStore.getProjectConfig;
-      // console.log('permissionMode=>',permissionMode)
       // const permissionMode="ROUTE_MAPPING"
       // 路由过滤器 在 函数filter 作为回调传入遍历使用
       const routeFilter = (route: AppRouteRecordRaw) => {
@@ -227,58 +226,31 @@ export const usePermissionStore = defineStore({
           // this function may only need to be executed once, and the actual project can be put at the right time by itself
           // 这个功能可能只需要执行一次，实际项目可以自己放在合适的时间
           let routeList: AppRouteRecordRaw[] = [];
-          // let routeList: AppRouteRecordRaw[] = [];
-          let routeList2: AppRouteRecordRaw[] = []
-          // let routeList2=[]
           try {
             await this.changePermissionCode();
-            // routeList = (await getMenuList()) as AppRouteRecordRaw[];
             const {obj}=await getMenuList2()
-            // console.log('routeList2=>',obj)
 
-            routeList2=cloneDeep(obj)
-            // routeList2=cloneDeep(adminRoutes)
-            // routeList2=routeList2 as AppRouteRecordRaw[]
-            // console.log('adminRoutes=>',adminRoutes)
-
-            //routesTest
-            //getMenu
+            routeList=cloneDeep(obj)
           } catch (error) {
             console.error(error);
           }
-
-          // Dynamically introduce components
-          // 动态引入组件
-          // console.log('routeList=>',routeList)
-
-          // routeList = transformObjToRoute(routeList);
-          // debugger
-          routeList2 = transformObjToRoute(routeList2);
-          // console.log('routeList2=>',routeList2)
+          routeList = transformObjToRoute(routeList);
 
           //  Background routing to menu structure
           //  后台路由到菜单结构
           // const backMenuList = transformRouteToMenu(routeList);
           // this.setBackMenuList(backMenuList);
 
-          const backMenuList2 = transformRouteToMenu(routeList2);
-          this.setBackMenuList(backMenuList2);
+          const backMenuList = transformRouteToMenu(routeList);
+          this.setBackMenuList(backMenuList);
 
           // remove meta.ignoreRoute item
           // 删除 meta.ignoreRoute 项
-          // routeList = filter(routeList, routeRemoveIgnoreFilter);
-          // routeList = routeList.filter(routeRemoveIgnoreFilter);
+          routeList = filter(routeList, routeRemoveIgnoreFilter);
+          routeList = routeList.filter(routeRemoveIgnoreFilter);
 
-          routeList2 = filter(routeList2, routeRemoveIgnoreFilter);
-          routeList2 = routeList2.filter(routeRemoveIgnoreFilter);
-
-          // routeList = flatMultiLevelRoutes(routeList);
-          routeList2 = flatMultiLevelRoutes(routeList2);
-          // routes = [PAGE_NOT_FOUND_ROUTE, ...routeList2];
-          routes = [PAGE_NOT_FOUND_ROUTE, ...routeList2];
-          // console.log('routes=>',routes)
-          // routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
-          // routes = [PAGE_NOT_FOUND_ROUTE, ...routeList,...routeList2];
+          routeList = flatMultiLevelRoutes(routeList);
+          routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
           break;
       }
 

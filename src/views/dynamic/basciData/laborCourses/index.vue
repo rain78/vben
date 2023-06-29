@@ -1,5 +1,8 @@
 <template>
   <div>
+    <!-- <teleport to="#breadBtn" >
+        <a-button color="warning" class="mr-2" @click="doEdit">修改</a-button>
+    </teleport> -->
     <CardList
       :actionColOptions="{ xs: 24, sm: 24, md: 24, lg: 12, xl: 12 }"
       :searchFormSchema="searchFormSchema"
@@ -26,8 +29,8 @@
           :iconSize="16"
           >新增</a-button
         >
-        <a-button color="warning" class="mr-2" @click="doEdit">修改</a-button>
-        <a-button type="danger" class="mr-2" @click="doDel">删除</a-button>
+        <a-button color="warning" preIcon="mdi:pencil" class="mr-2" @click="doEdit">修改</a-button>
+        <a-button type="danger" preIcon="mdi:delete"  class="mr-2" @click="doDel">删除</a-button>
       </template>
       <!-- <template #actionsOption1="{ data }" >
         <Space class="text-center"  @click="handleEdit(data)">
@@ -59,10 +62,12 @@
 
   let reload = () => {};
   let select = () => {};
+  let getSelectLast = () => {};
   // 获取内部fetch方法;
   function getMethod(m: any, flag) {
     if (flag === 'reload') reload = m;
     else if (flag === 'select') select = m;
+    else if (flag === 'getSelectLast') getSelectLast = m;
   }
 
    function handleEdit(record: Recordable) {
@@ -73,8 +78,8 @@
   }
 
   function doEdit(){
-    const selectData = select().filter(Boolean);
-    if (selectData.length <= 0) return createMessage.warning('请至少选择一条数据操作');
+    const selectData = getSelectLast();
+    if (selectData.length <= 0) return createMessage.warning('请选择一条数据操作');
     openModal(true, {
       record:selectData[selectData.length-1],
       isUpdate: true,

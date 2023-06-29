@@ -1,25 +1,8 @@
 <template>
   <div :class="prefixCls">
-    <Popover title="" trigger="click" :overlayClassName="`${prefixCls}__overlay`">
-      <Badge :count="count" dot :numberStyle="numberStyle">
-        <BellOutlined />
-      </Badge>
-      <template #content>
-        <Tabs>
-          <template v-for="item in listData" :key="item.key">
-            <TabPane>
-              <template #tab>
-                {{ item.name }}
-                <span v-if="item.list.length !== 0">({{ item.list.length }})</span>
-              </template>
-              <!-- 绑定title-click事件的通知列表中标题是“可点击”的-->
-              <NoticeList :list="item.list" v-if="item.key === '1'" @title-click="onNoticeClick" />
-              <NoticeList :list="item.list" v-else />
-            </TabPane>
-          </template>
-        </Tabs>
-      </template>
-    </Popover>
+    <Badge :count="count"  :numberStyle="numberStyle"  @click="onNoticeClick">
+        <Icon icon="mdi:bell"   />
+    </Badge>
   </div>
 </template>
 <script lang="ts">
@@ -30,26 +13,28 @@
   import NoticeList from './NoticeList.vue';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { Icon } from '/@/components/Icon';
+  import { useUserStore } from '/@/store/modules/user';
+  import { getUnreadCount } from '/@/api/common/index';
+  import { router, } from '/@/router';
+
+
+
 
   export default defineComponent({
-    components: { Popover, BellOutlined, Tabs, TabPane: Tabs.TabPane, Badge, NoticeList },
+    components: { Popover, BellOutlined, Tabs, TabPane: Tabs.TabPane, Badge, NoticeList,Icon },
     setup() {
       const { prefixCls } = useDesign('header-notify');
       const { createMessage } = useMessage();
       const listData = ref(tabListData);
+      const userStore = useUserStore();
+      const count=ref(0)
+      getUnreadCount({id:userStore.getUserInfo.id}).then(({obj})=>{
+        count.value=obj||0
+      })
 
-      const count = computed(() => {
-        let count = 0;
-        for (let i = 0; i < tabListData.length; i++) {
-          count += tabListData[i].list.length;
-        }
-        return count;
-      });
-
-      function onNoticeClick(record: ListItem) {
-        createMessage.success('你点击了通知，ID=' + record.id);
-        // 可以直接将其标记为已读（为标题添加删除线）,此处演示的代码会切换删除线状态
-        record.titleDelete = !record.titleDelete;
+      function onNoticeClick() {
+        router.push(`/IndustrialLabors/myCourse?activeKey=Notice`)
       }
 
       return {
@@ -67,6 +52,7 @@
 
   .@{prefix-cls} {
     padding-top: 2px;
+    line-height: 1;
 
     &__overlay {
       max-width: 360px;

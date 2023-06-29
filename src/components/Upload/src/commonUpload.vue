@@ -3,7 +3,7 @@
     <UploadDragger
       v-model:fileList="fileList"
       name="file"
-      :multiple="true"
+      v-bind="fileSet"
       :before-upload="beforeUpload"
       @drop="handleDrop"
     >
@@ -11,7 +11,7 @@
         <inbox-outlined></inbox-outlined>
       </p>
       <p class="ant-upload-text">拖拽文件于或者<em>点击上传</em></p>
-      <p class="ant-upload-hint"> 支持类型</p>
+      <p class="ant-upload-hint" v-if="fileSet&&fileSet.accept">支持类型:{{fileSet.accept}}</p>
       <template #itemRender="{ file, actions }">
         <div class="fileList">
             <span>{{ file.name }}</span>
@@ -30,6 +30,7 @@
   export default defineComponent({
     components: { BasicModal, UploadDragger:Upload.Dragger, Space },
     emits: ['success', 'register'],
+    props:['fileSet'],
     setup(_, { emit }) {
       const fileList = ref([]);
       const beforeUpload: UploadProps['beforeUpload'] = (file) => {

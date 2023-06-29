@@ -32,7 +32,7 @@ export function useForm(props?: Props): UseFormReturnType {
         loadedRef.value = null;
       });
     if (unref(loadedRef) && isProdMode() && instance === unref(formRef)) return;
-
+      // console.log('instance=>',instance)
     formRef.value = instance;
     loadedRef.value = true;
 

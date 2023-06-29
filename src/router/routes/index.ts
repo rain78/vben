@@ -44,7 +44,7 @@ export const UserInfo: AppRouteRecordRaw = {
   children: [
     {
       path: "user/:id?",
-      component: () => import('/@/views//common/userInfo/index.vue'),
+      component: () => import('/@/views/common/userInfo/index.vue'),
       meta: {
         // "hideMenu": true,
         // "hideBreadcrumb": true,
@@ -66,42 +66,58 @@ export const UserInfo: AppRouteRecordRaw = {
 
 };
 
-export const dashboardRoute: AppRouteRecordRaw = {
-  "path": "/dashboard",
-  "name": "Dashboard",
-  "component": "LAYOUT",
-  "redirect": "/dashboard/analysis",
-  "meta": {
-    "title": "routes.dashboard.dashboard",
-    "hideChildrenInMenu": true,
-    "icon": "bx:bx-home"
+
+
+export const dashboard: AppRouteModule = {
+  path: '/dashboard',
+  name: 'Dashboard',
+  component: LAYOUT,
+  redirect: '/dashboard/analysis',
+  meta: {
+    orderNo: 10,
+    icon: 'ion:grid-outline',
+    title: t('routes.dashboard.dashboard'),
   },
-  "children": [
+  children: [
     {
-      "path": "analysis",
-      "name": "Analysis",
-      "component": "/dashboard/analysis/index",
-      "meta": {
-        "hideMenu": true,
-        "hideBreadcrumb": true,
-        "title": "routes.dashboard.analysis",
-        "currentActiveMenu": "/dashboard",
-        "icon": "bx:bx-home"
-      }
+      path: 'analysis',
+      name: 'Analysis',
+      component: () => import('/@/views/dashboard/analysis/index.vue'),
+      meta: {
+        // affix: true,
+        title: t('routes.dashboard.analysis'),
+      },
     },
     {
-      "path": "workbench",
-      "name": "Workbench",
-      "component": "/dashboard/workbench/index",
-      "meta": {
-        "hideMenu": true,
-        "hideBreadcrumb": true,
-        "title": "routes.dashboard.workbench",
-        "currentActiveMenu": "/dashboard",
-        "icon": "bx:bx-home"
-      }
-    }
-  ]
+      path: 'workbench',
+      name: 'Workbench',
+      component: () => import('/@/views/dashboard/workbench/index.vue'),
+      meta: {
+        title: t('routes.dashboard.workbench'),
+      },
+    },
+  ],
+};
+
+export const Home: AppRouteModule = {
+  path: '/home',
+  name: 'Home',
+  component: LAYOUT,
+  meta: {
+    orderNo: 10,
+    icon: 'ion:grid-outline',
+    title: t('routes.dashboard.dashboard'),
+  },
+  children: [
+    {
+      path: '',
+      component: () => import('/@/views/common/home/index.vue'),
+      meta: {
+        // affix: true,
+        title:'主页',
+      },
+    },
+  ],
 }
 
 
@@ -111,7 +127,8 @@ export const basicRoutes = [
   LoginRoute,
   RootRoute,
   UserInfo,
-  // dashboardRoute,
+  dashboard,
+  Home,
   ...mainOutRoutes,
   REDIRECT_ROUTE,
   PAGE_NOT_FOUND_ROUTE,

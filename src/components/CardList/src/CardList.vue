@@ -127,6 +127,7 @@
     emit('getMethod', fetch, 'reload');
     emit('getMethod', handleDel, 'delete');
     emit('getMethod', getSelect, 'select');
+    emit('getMethod', getSelectLast, 'getSelectLast');
   });
 
   function GetProperty(obj, str) {
@@ -163,13 +164,19 @@
       });
     }
   }
-
+  const selectLast=null
   function handleSelect(data, index, flag) {
     if (flag) {
       selectData[index] = data;
+      selectLast.value=data
     } else {
       selectData[index] = null;
+      selectLast.value=null
     }
+  }
+
+   function getSelectLast() {
+    return selectLast;
   }
 
   function getSelect() {

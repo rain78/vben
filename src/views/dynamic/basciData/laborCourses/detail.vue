@@ -3,6 +3,7 @@
       ccc
     </template> -->
   <div class="p-16px border-box">
+    
     <div>
       <Row :gutter="10">
         <Col
@@ -27,17 +28,7 @@
                     <!-- <Card :title="item.name">{{item.sourceMaterialUrl}}</Card> -->
                     <div class="tool">
                       <div
-                        class="
-                          tool_top
-                          relative
-                          flex
-                          justify-center
-                          items-center
-                          text-1xl
-                          p-2
-                          border-box
-                          pb-0
-                        "
+                        class="tool_top relative flex justify-center items-center text-1xl p-2 border-box pb-0"
                       >
                         <span class="text-hex-7f7f7f">{{ item.name }}</span>
                       </div>
@@ -53,7 +44,8 @@
             </div>
             <h3 class="font-bold-500 text-20px">步骤</h3>
             <div>
-              <MarkdownViewer :value="previewData.stepContent" />
+              <MarkdownViewer :value="previewData.stepContent" v-if="previewData.stepContent" />
+              <Empty :image="simpleImage" v-else />
             </div>
           </Card>
         </Col>
@@ -137,6 +129,7 @@
           <List
             :grid="{ xs: 1, sm: 1, md: 1, lg: 1, xl: 1, xxl: 1, xxxl: 1 }"
             :data-source="previewData.safetyGuides"
+            v-if="previewData.safetyGuides&&previewData.safetyGuides.length"
           >
             <template #renderItem="{ item }">
               <ListItem>
@@ -162,13 +155,32 @@
               </ListItem>
             </template>
           </List>
+          <Card class="boxShadow !mb-10px" :bordered="false" v-else>
+            <CardMeta description="">
+              <template #avatar>
+                <Icon
+                  icon="mdi:security"
+                  class="mr-10px"
+                  :size="20"
+                  :color="projectSetting.themeColor"
+                />
+              </template>
+              <template #title>
+                <span >安全指南</span>
+              </template>
+            </CardMeta>
+            <Divider />
+            <div class="safetyGuideContent">
+              <Empty :image="simpleImage" />
+            </div>
+          </Card>
 
           <Card class="boxShadow mb-10px" title="热爱劳动教育视频" :bordered="false">
             <div class="w-full">
               <video controls v-if="previewData.sourceMaterialVideoUrl">
                 <source :src="previewData.sourceMaterialVideoUrl" alt="热爱劳动教育视频" />
               </video>
-              <el-empty description="暂无数据" v-else></el-empty>
+              <Empty :image="simpleImage" v-else />
             </div>
           </Card>
         </Col>
@@ -189,6 +201,7 @@
     TypographyParagraph,
     CardMeta,
     Divider,
+    Empty,
   } from 'ant-design-vue';
   import { ref, computed, unref, watch } from 'vue';
   import { useRoute } from 'vue-router';
@@ -209,6 +222,7 @@
   });
   const ID = computed(() => props.laborCourseId || route.params.id || '');
   const previewData = ref({});
+  const simpleImage = ref(Empty.PRESENTED_IMAGE_SIMPLE);
 
   watch(
     () => ID.value,
@@ -219,7 +233,7 @@
           previewData.value = {};
           return false;
         }
-        const { obj } =await getDetail({ id })
+        const { obj } = await getDetail({ id });
         previewData.value = obj || {};
       } catch (error) {
         console.log('error=>', error);
@@ -263,6 +277,16 @@
     });
     return news;
   });
+
+   function doEdit(){
+    const selectData = select().filter(Boolean);
+    if (selectData.length <= 0) return createMessage.warning('请至少选择一条数据操作');
+    openModal(true, {
+      record:selectData[selectData.length-1],
+      isUpdate: true,
+    });
+  }
+
 </script>
 
 <style lang="less" scoped>

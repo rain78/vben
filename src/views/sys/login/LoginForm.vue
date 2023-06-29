@@ -50,7 +50,7 @@
 
         <Divider class="enter-x">{{ t('sys.login.otherSignIn') }}</Divider>
 
-        <div class="flex justify-evenly enter-x" :class="`${prefixCls}-sign-in-way`">
+        <div class="flex justify-evenly enter-x" :class="`${prefixCls}-sign-in-way`" @click="goWxLogin">
           <WechatFilled />
         </div>
       </Form>
@@ -80,6 +80,8 @@
   import { LoginStateEnum, useLoginState, useFormRules, useFormValid } from './useLogin';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { Icon } from '/@/components/Icon';
+  import { getQRCode } from '/@/api/common/index';
+
   //import { onKeyStroke } from '@vueuse/core';
    const emit = defineEmits(['doSubmit']);
   const ACol = Col;
@@ -159,6 +161,13 @@
   }
 
   defineExpose({ handleLogin })
+
+  const goWxLogin=async ()=>{
+	const {success,obj} = await getQRCode();
+	if(success){
+		window.open(obj)
+	}
+}
 </script>
 <style lang="less" >
 // .verifybox{

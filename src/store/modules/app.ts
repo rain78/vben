@@ -6,6 +6,7 @@ import type {
   MultiTabsSetting,
 } from '/#/config';
 import type { BeforeMiniState } from '/#/store';
+import { useUserStore } from "./user.ts";
 
 import { defineStore } from 'pinia';
 import { store } from '/@/store';
@@ -16,6 +17,7 @@ import { Persistent } from '/@/utils/cache/persistent';
 import { darkMode } from '/@/settings/designSetting';
 import { resetRouter } from '/@/router';
 import { deepMerge } from '/@/utils';
+
 
 interface AppState {
   darkMode?: ThemeEnum;
@@ -52,7 +54,12 @@ export const useAppStore = defineStore({
     },
 
     getHeaderSetting(): HeaderSetting {
-      return this.getProjectConfig.headerSetting;
+      const userStore = useUserStore();
+
+      const role = userStore.getUserInfo.roles.includes('STUDENT')
+
+      return { ...this.getProjectConfig.headerSetting, showNotice: role };
+      // return this.getProjectConfig.headerSetting;
     },
     getMenuSetting(): MenuSetting {
       return this.getProjectConfig.menuSetting;

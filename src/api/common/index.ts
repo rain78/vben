@@ -40,6 +40,9 @@ export function formartClazz(value){
 }
 
 export const userDetail = (params) => apiHttp.get({ url: Api.user+(params.id?`/${params.id}`:'')});
+export const getUnreadCount = (params) => apiHttp.get({ url: `/notifyUser/${params.id}/unreadCount`});
 
+export const getQRCode = () => apiHttp.get({ url: `/wx/qr`});
+export const wxLogin = params => apiHttp.post({ url: `/wx/login`,params});
 
 

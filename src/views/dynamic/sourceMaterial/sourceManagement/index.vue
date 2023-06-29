@@ -36,7 +36,10 @@
         </a-button>
       </template>
     </CardList>
-    <CommonUpload @register="registerModal" @success="handleSuccess"></CommonUpload>
+    <CommonUpload @register="registerModal" @success="handleSuccess" :fileSet="{
+      multiple:true,
+      accept:'.jpg,.jpeg,.png,.mp4,.mov'
+    }"></CommonUpload>
   </div>
 </template>
 <script lang="ts" setup>
